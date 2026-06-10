@@ -14,6 +14,7 @@ const state = {
   currentBalance: 0,
   events: [],
   scenario: { ...DEFAULT_SCENARIO },
+  editingEventId: "",
 };
 
 const scenarioControls = [
@@ -51,6 +52,12 @@ function bindElements() {
     "eventRecurrence",
     "eventEnd",
     "eventNotes",
+    "eventFormTitle",
+    "eventSubmit",
+    "cancelEdit",
+    "eventList",
+    "eventCount",
+    "eventEmpty",
     "dailyRows",
     "dailyMeta",
     "monthlyCards",
@@ -97,22 +104,23 @@ function bindEvents() {
 
   els.eventForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    state.events.push({
-      id: createId(),
-      name: els.eventName.value.trim(),
-      amount: moneyValue(els.eventAmount.value),
-      type: els.eventType.value,
-      startDate: els.eventStart.value,
-      recurrence: els.eventRecurrence.value,
-      endDate: els.eventEnd.value || "",
-      notes: els.eventNotes.value.trim(),
-    });
-    els.eventForm.reset();
-    setDefaultDates();
+    const forecastEvent = readEventForm();
+    if (state.editingEventId) {
+      state.events = state.events.map((item) =>
+        item.id === state.editingEventId ? { ...forecastEvent, id: state.editingEventId } : item
+      );
+      toast("Forecast event updated.");
+    } else {
+      state.events.push({ ...forecastEvent, id: createId() });
+      toast("Forecast event added.");
+    }
+    resetEventForm();
     saveState();
     renderAll();
-    toast("Forecast event added.");
   });
+
+  els.cancelEdit.addEventListener("click", resetEventForm);
+  els.eventList.addEventListener("click", handleEventListAction);
 
   document.querySelectorAll("[data-nav]").forEach((button) => {
     button.addEventListener("click", () => switchView(button.dataset.nav));
@@ -153,6 +161,62 @@ function bindEvents() {
 function setDefaultDates() {
   const today = todayIso();
   if (!els.eventStart.value) els.eventStart.value = today;
+}
+
+function readEventForm() {
+  return {
+    name: els.eventName.value.trim(),
+    amount: moneyValue(els.eventAmount.value),
+    type: els.eventType.value,
+    startDate: els.eventStart.value,
+    recurrence: els.eventRecurrence.value,
+    endDate: els.eventEnd.value || "",
+    notes: els.eventNotes.value.trim(),
+  };
+}
+
+function resetEventForm() {
+  state.editingEventId = "";
+  els.eventForm.reset();
+  setDefaultDates();
+  els.eventFormTitle.textContent = "Add forecast event";
+  els.eventSubmit.textContent = "Add Forecast Event";
+  els.cancelEdit.hidden = true;
+}
+
+function startEditingEvent(id) {
+  const event = state.events.find((item) => item.id === id);
+  if (!event) return;
+  state.editingEventId = id;
+  els.eventName.value = event.name;
+  els.eventAmount.value = event.amount;
+  els.eventType.value = event.type;
+  els.eventStart.value = event.startDate;
+  els.eventRecurrence.value = event.recurrence;
+  els.eventEnd.value = event.endDate || "";
+  els.eventNotes.value = event.notes || "";
+  els.eventFormTitle.textContent = `Editing ${event.name}`;
+  els.eventSubmit.textContent = "Save Event";
+  els.cancelEdit.hidden = false;
+  els.eventName.focus();
+}
+
+function deleteEvent(id) {
+  const event = state.events.find((item) => item.id === id);
+  if (!event) return;
+  state.events = state.events.filter((item) => item.id !== id);
+  if (state.editingEventId === id) resetEventForm();
+  saveState();
+  renderAll();
+  toast(`${event.name} deleted.`);
+}
+
+function handleEventListAction(event) {
+  const button = event.target.closest("[data-event-action]");
+  if (!button) return;
+  const id = button.dataset.eventId;
+  if (button.dataset.eventAction === "edit") startEditingEvent(id);
+  if (button.dataset.eventAction === "delete") deleteEvent(id);
 }
 
 function loadState() {
@@ -444,11 +508,46 @@ function calculateRunwayScore(daily, monthly, startingBalance) {
 function renderAll() {
   const forecast = generateForecast(state);
   renderHeader(forecast);
+  renderEvents();
   renderDaily(forecast);
   renderMonthly(forecast);
   renderYearly(forecast);
   renderScenario();
   renderCalculators();
+}
+
+function renderEvents() {
+  const sortedEvents = [...state.events].sort((a, b) => {
+    const byDate = a.startDate.localeCompare(b.startDate);
+    return byDate || a.name.localeCompare(b.name);
+  });
+  els.eventCount.textContent = `${state.events.length} ${state.events.length === 1 ? "event" : "events"}`;
+  els.eventEmpty.hidden = sortedEvents.length > 0;
+  els.eventList.innerHTML = sortedEvents
+    .map((event) => {
+      const recurrence = event.recurrence === "none" ? "One-time" : titleCase(event.recurrence);
+      const notes = event.notes ? `<p>${escapeHtml(event.notes)}</p>` : "";
+      return `<article class="saved-event ${event.type}">
+        <div>
+          <header>
+            <span class="event-type ${event.type}">${event.type}</span>
+            <strong>${escapeHtml(event.name)}</strong>
+          </header>
+          <div class="event-meta">
+            <span>${formatMoney(event.type === "income" ? event.amount : -event.amount)}</span>
+            <span>${recurrence}</span>
+            <span>Starts ${formatDate(event.startDate)}</span>
+            ${event.endDate ? `<span>Ends ${formatDate(event.endDate)}</span>` : ""}
+          </div>
+          ${notes}
+        </div>
+        <div class="event-actions">
+          <button class="ghost-button" type="button" data-event-action="edit" data-event-id="${escapeAttribute(event.id)}">Edit</button>
+          <button class="delete-button" type="button" data-event-action="delete" data-event-id="${escapeAttribute(event.id)}">Delete</button>
+        </div>
+      </article>`;
+    })
+    .join("");
 }
 
 function renderHeader(forecast) {
@@ -871,6 +970,7 @@ function loadDemoPlan() {
     event("School supplies", 325, "expense", isoDate(addDays(today, 43)), "none", "", "One-time expense"),
   ];
   els.currentBalance.value = state.currentBalance;
+  resetEventForm();
   saveState();
   renderAll();
   toast("Demo plan loaded.");
@@ -909,6 +1009,7 @@ async function importJson(event) {
     state.currentBalance = Number(imported.currentBalance) || 0;
     state.events = imported.events.map(normalizeEvent);
     els.currentBalance.value = state.currentBalance;
+    resetEventForm();
     saveState();
     renderAll();
     toast("Plan imported.");
@@ -922,6 +1023,7 @@ async function importJson(event) {
 function resetData() {
   state.currentBalance = 0;
   state.events = [];
+  resetEventForm();
   els.currentBalance.value = "";
   saveState();
   renderAll();
@@ -1044,6 +1146,10 @@ function formatSliderValue(value, kind) {
   if (kind === "percent") return `${value}%`;
   if (kind === "months") return `${value} mo`;
   return String(value);
+}
+
+function titleCase(value) {
+  return String(value).replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function escapeHtml(value) {

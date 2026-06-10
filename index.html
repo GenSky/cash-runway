@@ -38,6 +38,14 @@
       </section>
 
       <section class="control-panel" aria-label="Plan setup">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Plan Setup</p>
+            <h2 id="eventFormTitle">Add forecast event</h2>
+          </div>
+          <button id="cancelEdit" class="ghost-button" type="button" hidden>Cancel Edit</button>
+        </div>
+
         <form id="balanceForm" class="inline-form">
           <label>
             Current account balance
@@ -86,8 +94,20 @@
             Notes
             <textarea id="eventNotes" rows="2" placeholder="Optional context"></textarea>
           </label>
-          <button type="submit">Add Forecast Event</button>
+          <button id="eventSubmit" type="submit">Add Forecast Event</button>
         </form>
+
+        <div class="event-manager" aria-label="Event calendar">
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="eyebrow">Event Calendar</p>
+              <h2>Saved forecast events</h2>
+            </div>
+            <p id="eventCount">0 events</p>
+          </div>
+          <div id="eventList" class="event-list"></div>
+          <p id="eventEmpty" class="empty-state">No saved events yet. Add income, bills, transfers, or expenses above.</p>
+        </div>
       </section>
 
       <section class="data-actions" aria-label="Data actions">
