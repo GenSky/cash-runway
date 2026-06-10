@@ -708,6 +708,12 @@ input[type="range"] {
   background: #fbfdfc;
 }
 
+.empty-table-row td {
+  color: var(--muted);
+  padding: 20px 12px;
+  text-align: center;
+}
+
 .toast {
   position: fixed;
   left: 14px;

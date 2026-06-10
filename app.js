@@ -561,8 +561,10 @@ function renderHeader(forecast) {
 function renderDaily(forecast) {
   const lowest = forecast.daily.reduce((min, day) => (day.endingBalance < min.endingBalance ? day : min), forecast.daily[0]);
   const nextPaycheck = forecast.daily.find((day) => day.events.some((event) => event.type === "income"));
-  els.dailyMeta.textContent = `Lowest: ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`;
-  els.dailyRows.innerHTML = forecast.daily
+  const eventDays = forecast.daily.filter((day) => day.events.length > 0);
+  els.dailyMeta.textContent = `Showing ${eventDays.length} event days. Lowest: ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`;
+  els.dailyRows.innerHTML = eventDays.length
+    ? eventDays
     .map((day) => {
       const classes = [
         day.endingBalance < 0 ? "negative-row" : "",
@@ -588,7 +590,10 @@ function renderDaily(forecast) {
         <td><span class="status-pill ${day.status.toLowerCase()}">${day.status}</span></td>
       </tr>`;
     })
-    .join("");
+    .join("")
+    : `<tr class="empty-table-row">
+        <td colspan="4">No forecast events yet. Add income, bills, transfers, or expenses to build the timeline.</td>
+      </tr>`;
 }
 
 function renderMonthly(forecast) {
