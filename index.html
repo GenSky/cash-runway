@@ -144,6 +144,22 @@
         </div>
       </section>
 
+      <section class="content-panel" id="calendarView" data-view="calendar">
+        <div class="section-heading calendar-heading">
+          <div>
+            <p class="eyebrow">Calendar View</p>
+            <h2 id="calendarTitle">Month view</h2>
+          </div>
+          <div class="calendar-controls">
+            <button class="ghost-button" id="calendarPrev" type="button" title="Previous month">Prev</button>
+            <button class="ghost-button" id="calendarToday" type="button">Today</button>
+            <button class="ghost-button" id="calendarNext" type="button" title="Next month">Next</button>
+          </div>
+        </div>
+        <p id="calendarMeta" class="calendar-meta"></p>
+        <div id="calendarGrid" class="calendar-grid" aria-label="Monthly forecast calendar"></div>
+      </section>
+
       <section class="content-panel" id="monthlyView" data-view="monthly">
         <div class="section-heading">
           <div>
@@ -261,6 +277,7 @@
 
     <nav class="bottom-nav" aria-label="Primary">
       <button class="active" data-nav="daily" type="button">Daily</button>
+      <button data-nav="calendar" type="button">Calendar</button>
       <button data-nav="monthly" type="button">Monthly</button>
       <button data-nav="yearly" type="button">Yearly</button>
       <button data-nav="scenarios" type="button">Scenarios</button>

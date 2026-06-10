@@ -15,6 +15,7 @@ const state = {
   events: [],
   scenario: { ...DEFAULT_SCENARIO },
   editingEventId: "",
+  calendarMonth: todayIso().slice(0, 7),
 };
 
 const scenarioControls = [
@@ -60,6 +61,12 @@ function bindElements() {
     "eventEmpty",
     "dailyRows",
     "dailyMeta",
+    "calendarGrid",
+    "calendarTitle",
+    "calendarMeta",
+    "calendarPrev",
+    "calendarNext",
+    "calendarToday",
     "monthlyCards",
     "monthlyGraph",
     "yearlyCards",
@@ -121,6 +128,12 @@ function bindEvents() {
 
   els.cancelEdit.addEventListener("click", resetEventForm);
   els.eventList.addEventListener("click", handleEventListAction);
+  els.calendarPrev.addEventListener("click", () => shiftCalendarMonth(-1));
+  els.calendarNext.addEventListener("click", () => shiftCalendarMonth(1));
+  els.calendarToday.addEventListener("click", () => {
+    state.calendarMonth = todayIso().slice(0, 7);
+    renderAll();
+  });
 
   document.querySelectorAll("[data-nav]").forEach((button) => {
     button.addEventListener("click", () => switchView(button.dataset.nav));
@@ -217,6 +230,14 @@ function handleEventListAction(event) {
   const id = button.dataset.eventId;
   if (button.dataset.eventAction === "edit") startEditingEvent(id);
   if (button.dataset.eventAction === "delete") deleteEvent(id);
+}
+
+function shiftCalendarMonth(offset) {
+  const [year, month] = state.calendarMonth.split("-").map(Number);
+  const next = new Date(year, month - 1, 1);
+  next.setMonth(next.getMonth() + offset);
+  state.calendarMonth = isoDate(next).slice(0, 7);
+  renderAll();
 }
 
 function loadState() {
@@ -510,6 +531,7 @@ function renderAll() {
   renderHeader(forecast);
   renderEvents();
   renderDaily(forecast);
+  renderCalendar(forecast);
   renderMonthly(forecast);
   renderYearly(forecast);
   renderScenario();
@@ -594,6 +616,66 @@ function renderDaily(forecast) {
     : `<tr class="empty-table-row">
         <td colspan="4">No forecast events yet. Add income, bills, transfers, or expenses to build the timeline.</td>
       </tr>`;
+}
+
+function renderCalendar(forecast) {
+  const [year, month] = state.calendarMonth.split("-").map(Number);
+  const monthStart = new Date(year, month - 1, 1);
+  const gridStart = addDays(monthStart, -monthStart.getDay());
+  const days = Array.from({ length: 42 }, (_, index) => addDays(gridStart, index));
+  const dailyByDate = new Map(forecast.daily.map((day) => [day.date, day]));
+  const monthDays = forecast.daily.filter((day) => day.date.startsWith(state.calendarMonth));
+  const eventDays = monthDays.filter((day) => day.events.length > 0);
+  const eventCount = monthDays.reduce((total, day) => total + day.events.length, 0);
+  const lowest = monthDays.length
+    ? monthDays.reduce((min, day) => (day.endingBalance < min.endingBalance ? day : min), monthDays[0])
+    : null;
+
+  els.calendarTitle.textContent = monthStart.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  els.calendarMeta.textContent = monthDays.length
+    ? `${eventDays.length} event days · ${eventCount} total events · Lowest ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`
+    : "This month is outside the current 365-day forecast window.";
+
+  const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    .map((label) => `<div class="calendar-weekday">${label}</div>`)
+    .join("");
+
+  const dayCells = days
+    .map((date) => {
+      const dateIso = isoDate(date);
+      const day = dailyByDate.get(dateIso);
+      const isCurrentMonth = date.getMonth() === monthStart.getMonth();
+      const isToday = dateIso === todayIso();
+      const events = day?.events || [];
+      const visibleEvents = events.slice(0, 3);
+      const classes = [
+        "calendar-day",
+        isCurrentMonth ? "" : "outside-month",
+        isToday ? "today" : "",
+        events.length ? "has-events" : "",
+        day?.status ? day.status.toLowerCase() : "",
+      ]
+        .filter(Boolean)
+        .join(" ");
+      const eventsHtml = visibleEvents
+        .map(
+          (event) =>
+            `<span class="calendar-event ${event.type}">${escapeHtml(event.name)} ${formatMoney(event.signedAmount)}</span>`
+        )
+        .join("");
+      const overflow = events.length > visibleEvents.length ? `<span class="calendar-more">+${events.length - visibleEvents.length} more</span>` : "";
+      const balance = day ? `<span class="calendar-balance">${formatMoney(day.endingBalance)}</span>` : "";
+      return `<div class="${classes}">
+        <div class="calendar-day-header">
+          <span>${date.getDate()}</span>
+          ${balance}
+        </div>
+        <div class="calendar-events">${eventsHtml}${overflow}</div>
+      </div>`;
+    })
+    .join("");
+
+  els.calendarGrid.innerHTML = `${weekdayLabels}${dayCells}`;
 }
 
 function renderMonthly(forecast) {
