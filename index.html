@@ -32,6 +32,15 @@
       </div>
     </header>
 
+    <nav class="bottom-nav" aria-label="Primary">
+      <button class="active" data-nav="daily" type="button">Daily</button>
+      <button data-nav="calendar" type="button">Calendar</button>
+      <button data-nav="monthly" type="button">Monthly</button>
+      <button data-nav="yearly" type="button">Yearly</button>
+      <button data-nav="scenarios" type="button">Scenarios</button>
+      <button data-nav="calculators" type="button">Calculators</button>
+    </nav>
+
     <main class="app-shell">
       <section class="hero-panel" aria-label="Current forecast">
         <div class="balance-card" id="balanceCard">
@@ -294,15 +303,6 @@
         </div>
       </section>
     </main>
-
-    <nav class="bottom-nav" aria-label="Primary">
-      <button class="active" data-nav="daily" type="button">Daily</button>
-      <button data-nav="calendar" type="button">Calendar</button>
-      <button data-nav="monthly" type="button">Monthly</button>
-      <button data-nav="yearly" type="button">Yearly</button>
-      <button data-nav="scenarios" type="button">Scenarios</button>
-      <button data-nav="calculators" type="button">Calculators</button>
-    </nav>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>
