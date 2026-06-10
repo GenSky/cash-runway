@@ -64,6 +64,58 @@
   --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.26);
 }
 
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] .file-button {
+  color: #051b18;
+}
+
+:root[data-theme="dark"] .ghost-button,
+:root[data-theme="dark"] .delete-button {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] th {
+  color: #c7d7d2;
+}
+
+:root[data-theme="dark"] td {
+  color: #f6fbf9;
+}
+
+:root[data-theme="dark"] .section-heading p:last-child,
+:root[data-theme="dark"] .calendar-meta {
+  color: #c1d0cb;
+}
+
+:root[data-theme="dark"] .event-chip.income,
+:root[data-theme="dark"] .calendar-event.income,
+:root[data-theme="dark"] .event-type.income {
+  color: #ecfffb;
+  background: #087869;
+}
+
+:root[data-theme="dark"] .event-chip.expense,
+:root[data-theme="dark"] .calendar-event.expense,
+:root[data-theme="dark"] .event-type.expense {
+  color: #f4f8ff;
+  background: #2f64d6;
+}
+
+:root[data-theme="dark"] .status-pill.safe {
+  color: #eafffb;
+  background: #087869;
+}
+
+:root[data-theme="dark"] .status-pill.caution {
+  color: #211604;
+  background: #f6c453;
+}
+
+:root[data-theme="dark"] .status-pill.danger {
+  color: #fff5f3;
+  background: #b42318;
+}
+
 * {
   box-sizing: border-box;
 }
