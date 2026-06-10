@@ -18,6 +18,7 @@ const state = {
   scenario: { ...DEFAULT_SCENARIO },
   editingEventId: "",
   calendarMonth: todayIso().slice(0, 7),
+  theme: "light",
 };
 
 const scenarioControls = [
@@ -48,6 +49,8 @@ function bindElements() {
     "balanceForm",
     "currentBalance",
     "forecastYears",
+    "themeToggle",
+    "themeColor",
     "eventForm",
     "eventName",
     "eventAmount",
@@ -119,6 +122,13 @@ function bindEvents() {
     saveState();
     renderAll();
     toast(`Forecast window set to ${state.forecastYears} ${state.forecastYears === 1 ? "year" : "years"}.`);
+  });
+
+  els.themeToggle.addEventListener("click", () => {
+    state.theme = state.theme === "dark" ? "light" : "dark";
+    applyTheme();
+    saveState();
+    toast(`${state.theme === "dark" ? "Dark" : "Light"} mode enabled.`);
   });
 
   els.eventForm.addEventListener("submit", (event) => {
@@ -258,6 +268,7 @@ function loadState() {
     if (saved && Array.isArray(saved.events)) {
       state.currentBalance = Number(saved.currentBalance) || 0;
       state.forecastYears = forecastYearsValue(saved.forecastYears);
+      state.theme = themeValue(saved.theme);
       state.events = saved.events.map(normalizeEvent);
     }
   } catch {
@@ -265,6 +276,7 @@ function loadState() {
   }
   els.currentBalance.value = state.currentBalance || "";
   els.forecastYears.value = String(state.forecastYears);
+  applyTheme();
 }
 
 function saveState() {
@@ -273,6 +285,7 @@ function saveState() {
     JSON.stringify({
       currentBalance: state.currentBalance,
       forecastYears: state.forecastYears,
+      theme: state.theme,
       events: state.events,
     })
   );
@@ -291,6 +304,15 @@ function normalizeEvent(event) {
     endDate: event.endDate || "",
     notes: event.notes || "",
   };
+}
+
+function applyTheme() {
+  const isDark = state.theme === "dark";
+  document.documentElement.dataset.theme = isDark ? "dark" : "light";
+  els.themeToggle.textContent = isDark ? "Light" : "Dark";
+  els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
+  els.themeToggle.setAttribute("aria-pressed", String(isDark));
+  els.themeColor.content = isDark ? "#0b1110" : "#0f766e";
 }
 
 // Forecasting is deliberately data-first: every view, stress test, and calculator
@@ -1094,7 +1116,7 @@ function firstOfNextMonth(day) {
 }
 
 function exportJson() {
-  const blob = new Blob([JSON.stringify({ currentBalance: state.currentBalance, forecastYears: state.forecastYears, events: state.events }, null, 2)], {
+  const blob = new Blob([JSON.stringify({ currentBalance: state.currentBalance, forecastYears: state.forecastYears, theme: state.theme, events: state.events }, null, 2)], {
     type: "application/json",
   });
   const url = URL.createObjectURL(blob);
@@ -1114,9 +1136,11 @@ async function importJson(event) {
     if (!Array.isArray(imported.events)) throw new Error("Missing events");
     state.currentBalance = Number(imported.currentBalance) || 0;
     state.forecastYears = forecastYearsValue(imported.forecastYears);
+    state.theme = themeValue(imported.theme || state.theme);
     state.events = imported.events.map(normalizeEvent);
     els.currentBalance.value = state.currentBalance;
     els.forecastYears.value = String(state.forecastYears);
+    applyTheme();
     resetEventForm();
     saveState();
     renderAll();
@@ -1226,6 +1250,10 @@ function moneyValue(value) {
 function forecastYearsValue(value) {
   const years = Number(value) || DEFAULT_FORECAST_YEARS;
   return [1, 2, 3, 5].includes(years) ? years : DEFAULT_FORECAST_YEARS;
+}
+
+function themeValue(value) {
+  return value === "dark" ? "dark" : "light";
 }
 
 function getForecastDays(plan = state) {
