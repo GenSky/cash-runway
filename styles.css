@@ -886,7 +886,7 @@ input[type="range"] {
   }
 
   .inline-form {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr 180px auto;
     align-items: end;
   }
 

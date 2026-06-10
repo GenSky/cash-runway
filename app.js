@@ -1,5 +1,6 @@
 const STORAGE_KEY = "cash-runway-v1";
-const FORECAST_DAYS = 365;
+const DAYS_PER_YEAR = 365;
+const DEFAULT_FORECAST_YEARS = 1;
 const DEFAULT_SCENARIO = {
   jobLossDuration: 0,
   emergencyExpense: 0,
@@ -12,6 +13,7 @@ const DEFAULT_SCENARIO = {
 
 const state = {
   currentBalance: 0,
+  forecastYears: DEFAULT_FORECAST_YEARS,
   events: [],
   scenario: { ...DEFAULT_SCENARIO },
   editingEventId: "",
@@ -45,6 +47,7 @@ function bindElements() {
   [
     "balanceForm",
     "currentBalance",
+    "forecastYears",
     "eventForm",
     "eventName",
     "eventAmount",
@@ -59,6 +62,7 @@ function bindElements() {
     "eventList",
     "eventCount",
     "eventEmpty",
+    "dailyTitle",
     "dailyRows",
     "dailyMeta",
     "calendarGrid",
@@ -104,9 +108,17 @@ function bindEvents() {
   els.balanceForm.addEventListener("submit", (event) => {
     event.preventDefault();
     state.currentBalance = moneyValue(els.currentBalance.value);
+    state.forecastYears = forecastYearsValue(els.forecastYears.value);
     saveState();
     renderAll();
-    toast("Balance updated.");
+    toast("Plan settings updated.");
+  });
+
+  els.forecastYears.addEventListener("change", () => {
+    state.forecastYears = forecastYearsValue(els.forecastYears.value);
+    saveState();
+    renderAll();
+    toast(`Forecast window set to ${state.forecastYears} ${state.forecastYears === 1 ? "year" : "years"}.`);
   });
 
   els.eventForm.addEventListener("submit", (event) => {
@@ -245,12 +257,14 @@ function loadState() {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
     if (saved && Array.isArray(saved.events)) {
       state.currentBalance = Number(saved.currentBalance) || 0;
+      state.forecastYears = forecastYearsValue(saved.forecastYears);
       state.events = saved.events.map(normalizeEvent);
     }
   } catch {
     localStorage.removeItem(STORAGE_KEY);
   }
   els.currentBalance.value = state.currentBalance || "";
+  els.forecastYears.value = String(state.forecastYears);
 }
 
 function saveState() {
@@ -258,6 +272,7 @@ function saveState() {
     STORAGE_KEY,
     JSON.stringify({
       currentBalance: state.currentBalance,
+      forecastYears: state.forecastYears,
       events: state.events,
     })
   );
@@ -283,8 +298,8 @@ function normalizeEvent(event) {
 function generateForecast(plan, options = {}) {
   const scenario = { ...DEFAULT_SCENARIO, ...(options.scenario || {}) };
   const startDate = options.startDate ? parseDate(options.startDate) : parseDate(todayIso());
-  const days = options.days || FORECAST_DAYS;
-  const scenarioEvents = buildScenarioEvents(plan, scenario, startDate);
+  const days = options.days || getForecastDays(plan);
+  const scenarioEvents = buildScenarioEvents(plan, scenario, startDate, days);
   const allEvents = [...plan.events.map(normalizeEvent), ...scenarioEvents];
   let balance = Number(plan.currentBalance) || 0;
   const daily = [];
@@ -362,10 +377,10 @@ function applyScenarioToOccurrence(event, scenario, date, startDate) {
   };
 }
 
-function buildScenarioEvents(plan, scenario, startDate) {
+function buildScenarioEvents(plan, scenario, startDate, days) {
   const events = [];
   const start = isoDate(startDate);
-  const yearEnd = isoDate(addDays(startDate, FORECAST_DAYS - 1));
+  const yearEnd = isoDate(addDays(startDate, days - 1));
 
   if (scenario.emergencyExpense > 0) {
     events.push(scenarioEvent("Scenario: Emergency expense", scenario.emergencyExpense, "expense", start, "none"));
@@ -494,7 +509,7 @@ function calculateRunwayScore(daily, monthly, startingBalance) {
     firstNegativeIndex === -1
       ? -1
       : daily.findIndex((day, index) => index > firstNegativeIndex && day.endingBalance >= 0);
-  const recoveryDays = recoveryIndex === -1 ? FORECAST_DAYS : recoveryIndex - firstNegativeIndex;
+  const recoveryDays = recoveryIndex === -1 ? daily.length : recoveryIndex - firstNegativeIndex;
 
   let score = 100;
   score -= Math.min(35, negativeDays * 1.4);
@@ -584,7 +599,8 @@ function renderDaily(forecast) {
   const lowest = forecast.daily.reduce((min, day) => (day.endingBalance < min.endingBalance ? day : min), forecast.daily[0]);
   const nextPaycheck = forecast.daily.find((day) => day.events.some((event) => event.type === "income"));
   const eventDays = forecast.daily.filter((day) => day.events.length > 0);
-  els.dailyMeta.textContent = `Showing ${eventDays.length} event days. Lowest: ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`;
+  els.dailyTitle.textContent = `Next ${state.forecastYears === 1 ? "year" : `${state.forecastYears} years`}`;
+  els.dailyMeta.textContent = `Showing ${eventDays.length} event days across ${state.forecastYears} ${state.forecastYears === 1 ? "year" : "years"}. Lowest: ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`;
   els.dailyRows.innerHTML = eventDays.length
     ? eventDays
     .map((day) => {
@@ -634,7 +650,7 @@ function renderCalendar(forecast) {
   els.calendarTitle.textContent = monthStart.toLocaleDateString(undefined, { month: "long", year: "numeric" });
   els.calendarMeta.textContent = monthDays.length
     ? `${eventDays.length} event days · ${eventCount} total events · Lowest ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`
-    : "This month is outside the current 365-day forecast window.";
+    : `This month is outside the current ${state.forecastYears}-${state.forecastYears === 1 ? "year" : "year"} forecast window.`;
 
   const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     .map((label) => `<div class="calendar-weekday">${label}</div>`)
@@ -789,14 +805,14 @@ function runStressTests() {
       const score = forecast.score;
       const firstNegative = score.firstNegativeDate ? formatDate(score.firstNegativeDate) : "Never";
       const recoveryMonth =
-        score.firstNegativeDate && score.recoveryDays < FORECAST_DAYS
+        score.firstNegativeDate && score.recoveryDays < forecast.daily.length
           ? formatMonth(forecast.daily.find((day) => day.date >= score.firstNegativeDate && day.endingBalance >= 0)?.date.slice(0, 7))
           : score.firstNegativeDate
             ? "Not recovered"
             : "Not needed";
       const survivalDays = score.firstNegativeDate
         ? daysBetween(parseDate(todayIso()), parseDate(score.firstNegativeDate))
-        : FORECAST_DAYS;
+        : forecast.daily.length;
       return `<tr>
         <td>${name}</td>
         <td>${formatMoney(score.lowestBalance)}</td>
@@ -814,7 +830,8 @@ function runStressTests() {
 function applyScenario() {
   const scenario = { ...state.scenario };
   const start = todayIso();
-  const end = isoDate(addDays(parseDate(start), FORECAST_DAYS - 1));
+  const forecastDays = getForecastDays(state);
+  const end = isoDate(addDays(parseDate(start), forecastDays - 1));
 
   if (scenario.emergencyExpense > 0) {
     state.events.push(scenarioEvent("Emergency expense", scenario.emergencyExpense, "expense", start, "none"));
@@ -845,7 +862,7 @@ function applyScenario() {
     state.events
       .filter((event) => event.type === "income")
       .forEach((event) => {
-        for (let offset = 0; offset < FORECAST_DAYS; offset += 1) {
+        for (let offset = 0; offset < forecastDays; offset += 1) {
           const date = addDays(parseDate(start), offset);
           if (date >= lossEnd) break;
           if (eventOccursOn(event, date)) {
@@ -1043,6 +1060,7 @@ function loadDemoPlan() {
   const today = parseDate(todayIso());
   const nextFriday = addDays(today, (5 - today.getDay() + 7) % 7 || 14);
   state.currentBalance = 1850;
+  state.forecastYears = DEFAULT_FORECAST_YEARS;
   state.events = [
     event("Biweekly paycheck", 2450, "income", isoDate(nextFriday), "biweekly", "", "Primary job income"),
     event("Mortgage", 1725, "expense", firstOfNextMonth(1), "monthly", "", "Housing"),
@@ -1057,6 +1075,7 @@ function loadDemoPlan() {
     event("School supplies", 325, "expense", isoDate(addDays(today, 43)), "none", "", "One-time expense"),
   ];
   els.currentBalance.value = state.currentBalance;
+  els.forecastYears.value = String(state.forecastYears);
   resetEventForm();
   saveState();
   renderAll();
@@ -1075,7 +1094,7 @@ function firstOfNextMonth(day) {
 }
 
 function exportJson() {
-  const blob = new Blob([JSON.stringify({ currentBalance: state.currentBalance, events: state.events }, null, 2)], {
+  const blob = new Blob([JSON.stringify({ currentBalance: state.currentBalance, forecastYears: state.forecastYears, events: state.events }, null, 2)], {
     type: "application/json",
   });
   const url = URL.createObjectURL(blob);
@@ -1094,8 +1113,10 @@ async function importJson(event) {
     const imported = JSON.parse(await file.text());
     if (!Array.isArray(imported.events)) throw new Error("Missing events");
     state.currentBalance = Number(imported.currentBalance) || 0;
+    state.forecastYears = forecastYearsValue(imported.forecastYears);
     state.events = imported.events.map(normalizeEvent);
     els.currentBalance.value = state.currentBalance;
+    els.forecastYears.value = String(state.forecastYears);
     resetEventForm();
     saveState();
     renderAll();
@@ -1109,9 +1130,11 @@ async function importJson(event) {
 
 function resetData() {
   state.currentBalance = 0;
+  state.forecastYears = DEFAULT_FORECAST_YEARS;
   state.events = [];
   resetEventForm();
   els.currentBalance.value = "";
+  els.forecastYears.value = String(state.forecastYears);
   saveState();
   renderAll();
   toast("Plan reset.");
@@ -1122,6 +1145,7 @@ async function copySummary() {
   const text = [
     "Cash Runway Summary",
     `Current balance: ${formatMoney(state.currentBalance)}`,
+    `Forecast window: ${state.forecastYears} ${state.forecastYears === 1 ? "year" : "years"}`,
     `Year-end projection: ${formatMoney(forecast.yearly.yearEndBalance)}`,
     `Lowest balance: ${formatMoney(forecast.score.lowestBalance)}`,
     `Negative days: ${forecast.score.negativeDays}`,
@@ -1197,6 +1221,15 @@ function sum(items, key) {
 
 function moneyValue(value) {
   return Math.max(0, Number(value) || 0);
+}
+
+function forecastYearsValue(value) {
+  const years = Number(value) || DEFAULT_FORECAST_YEARS;
+  return [1, 2, 3, 5].includes(years) ? years : DEFAULT_FORECAST_YEARS;
+}
+
+function getForecastDays(plan = state) {
+  return forecastYearsValue(plan.forecastYears) * DAYS_PER_YEAR;
 }
 
 function roundMoney(value) {

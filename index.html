@@ -51,6 +51,15 @@
             Current account balance
             <input id="currentBalance" type="number" step="0.01" inputmode="decimal" required />
           </label>
+          <label>
+            Forecast window
+            <select id="forecastYears">
+              <option value="1">1 year</option>
+              <option value="2">2 years</option>
+              <option value="3">3 years</option>
+              <option value="5">5 years</option>
+            </select>
+          </label>
           <button type="submit">Update</button>
         </form>
 
@@ -125,7 +134,7 @@
         <div class="section-heading">
           <div>
             <p class="eyebrow">Daily View</p>
-            <h2>Next 365 days</h2>
+            <h2 id="dailyTitle">Next year</h2>
           </div>
           <p id="dailyMeta"></p>
         </div>

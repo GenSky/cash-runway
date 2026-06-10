@@ -1,4 +1,4 @@
-const CACHE_NAME = "cash-runway-v7";
+const CACHE_NAME = "cash-runway-v8";
 const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
