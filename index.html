@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta
+      name="description"
+      content="Cash Runway projects your future bank balance before your bills hit."
+    />
+    <title>Cash Runway</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Cash Runway</p>
+        <h1>See your future bank balance before your bills hit.</h1>
+      </div>
+      <button class="icon-button" id="installButton" type="button" hidden title="Install app">Install</button>
+    </header>
+
+    <main class="app-shell">
+      <section class="hero-panel" aria-label="Current forecast">
+        <div class="balance-card" id="balanceCard">
+          <span>Projected year-end balance</span>
+          <strong id="yearEndBalance">$0</strong>
+          <small id="scoreExplanation">Add your balance and events to build a forecast.</small>
+        </div>
+        <div class="score-card">
+          <div>
+            <span>Cash Runway Score</span>
+            <strong id="runwayScore">0</strong>
+          </div>
+          <p id="runwayStatus" class="status-pill caution">Caution</p>
+        </div>
+      </section>
+
+      <section class="control-panel" aria-label="Plan setup">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Plan Setup</p>
+            <h2 id="eventFormTitle">Add forecast event</h2>
+          </div>
+          <button id="cancelEdit" class="ghost-button" type="button" hidden>Cancel Edit</button>
+        </div>
+
+        <form id="balanceForm" class="inline-form">
+          <label>
+            Current account balance
+            <input id="currentBalance" type="number" step="0.01" inputmode="decimal" required />
+          </label>
+          <button type="submit">Update</button>
+        </form>
+
+        <form id="eventForm" class="event-form">
+          <div class="form-grid">
+            <label>
+              Event name
+              <input id="eventName" type="text" placeholder="Paycheck, rent, utilities" required />
+            </label>
+            <label>
+              Amount
+              <input id="eventAmount" type="number" step="0.01" inputmode="decimal" min="0" required />
+            </label>
+            <label>
+              Type
+              <select id="eventType">
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
+              </select>
+            </label>
+            <label>
+              Start date
+              <input id="eventStart" type="date" required />
+            </label>
+            <label>
+              Recurrence
+              <select id="eventRecurrence">
+                <option value="none">None</option>
+                <option value="weekly">Weekly</option>
+                <option value="biweekly">Biweekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </label>
+            <label>
+              End date
+              <input id="eventEnd" type="date" />
+            </label>
+          </div>
+          <label>
+            Notes
+            <textarea id="eventNotes" rows="2" placeholder="Optional context"></textarea>
+          </label>
+          <button id="eventSubmit" type="submit">Add Forecast Event</button>
+        </form>
+
+        <div class="event-manager" aria-label="Event calendar">
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="eyebrow">Event Calendar</p>
+              <h2>Saved forecast events</h2>
+            </div>
+            <p id="eventCount">0 events</p>
+          </div>
+          <div id="eventList" class="event-list"></div>
+          <p id="eventEmpty" class="empty-state">No saved events yet. Add income, bills, transfers, or expenses above.</p>
+        </div>
+      </section>
+
+      <section class="data-actions" aria-label="Data actions">
+        <button id="loadDemo" type="button">Load Demo Plan</button>
+        <button id="exportJson" type="button">Export JSON</button>
+        <label class="file-button">
+          Import JSON
+          <input id="importJson" type="file" accept="application/json" />
+        </label>
+        <button id="copySummary" type="button">Copy Summary</button>
+        <button id="resetData" class="danger-button" type="button">Reset Data</button>
+      </section>
+
+      <section class="content-panel active" id="dailyView" data-view="daily">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Daily View</p>
+            <h2>Next 365 days</h2>
+          </div>
+          <p id="dailyMeta"></p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Events</th>
+                <th>Ending Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dailyRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="content-panel" id="monthlyView" data-view="monthly">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Monthly View</p>
+            <h2>Monthly cash flow</h2>
+          </div>
+        </div>
+        <div id="monthlyGraph" class="bar-graph" aria-label="Monthly trend graph"></div>
+        <div id="monthlyCards" class="card-grid"></div>
+      </section>
+
+      <section class="content-panel" id="yearlyView" data-view="yearly">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Yearly View</p>
+            <h2>12-month runway</h2>
+          </div>
+          <p id="yearlyMeta"></p>
+        </div>
+        <div id="yearlyGraph" class="line-graph" aria-label="Cash growth trend chart"></div>
+        <div id="yearlyCards" class="card-grid"></div>
+      </section>
+
+      <section class="content-panel" id="scenariosView" data-view="scenarios">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Scenario Center</p>
+            <h2>What if life changes?</h2>
+          </div>
+          <button id="applyScenario" type="button">Apply Scenario</button>
+        </div>
+        <div id="scenarioSliders" class="slider-grid"></div>
+        <div class="scenario-result">
+          <div class="balance-card compact">
+            <span>Scenario year-end balance</span>
+            <strong id="scenarioYearEnd">$0</strong>
+            <small id="scenarioSummary">Move sliders to simulate changes.</small>
+          </div>
+          <button id="stressTest" type="button">Stress Test My Life</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Lowest Balance</th>
+                <th>First Negative Date</th>
+                <th>Survival Days</th>
+                <th>Recovery Month</th>
+                <th>Year-End Balance</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="stressRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="content-panel" id="calculatorsView" data-view="calculators">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Calculators</p>
+            <h2>Tools that feed the forecast</h2>
+          </div>
+        </div>
+        <div class="calculator-grid">
+          <article class="calculator-card" id="balanceTransferCalc">
+            <h3>Balance Transfer Optimizer</h3>
+            <div class="form-grid compact-grid">
+              <label>Transfer amount <input data-bt="amount" type="number" value="6000" min="0" /></label>
+              <label>Fee % <input data-bt="fee" type="number" value="3" min="0" step="0.1" /></label>
+              <label>Promo months <input data-bt="months" type="number" value="18" min="1" /></label>
+              <label>Minimum payment % <input data-bt="min" type="number" value="2" min="0.1" step="0.1" /></label>
+              <label>Existing APR <input data-bt="apr" type="number" value="24.99" min="0" step="0.01" /></label>
+            </div>
+            <div class="calc-output" id="btOutput"></div>
+            <button data-add="balanceTransfer" type="button">Add To Calendar</button>
+          </article>
+
+          <article class="calculator-card" id="snowballCalc">
+            <h3>Debt Snowball Planner</h3>
+            <div class="debt-list" id="debtRows"></div>
+            <button id="addDebtRow" type="button">Add Debt</button>
+            <label>Extra monthly payment <input id="snowballExtra" type="number" value="150" min="0" /></label>
+            <div class="calc-output" id="snowballOutput"></div>
+            <button data-add="snowball" type="button">Add To Calendar</button>
+          </article>
+
+          <article class="calculator-card" id="carCalc">
+            <h3>Car Payment Impact Calculator</h3>
+            <div class="form-grid compact-grid">
+              <label>Loan amount <input data-car="amount" type="number" value="28000" min="0" /></label>
+              <label>Down payment <input data-car="down" type="number" value="3000" min="0" /></label>
+              <label>APR <input data-car="apr" type="number" value="7.5" min="0" step="0.1" /></label>
+              <label>Months <input data-car="months" type="number" value="60" min="1" /></label>
+            </div>
+            <div class="calc-output" id="carOutput"></div>
+            <button data-add="car" type="button">Add To Calendar</button>
+          </article>
+
+          <article class="calculator-card" id="emergencyCalc">
+            <h3>Emergency Fund Calculator</h3>
+            <div class="form-grid compact-grid">
+              <label>Monthly essential expenses <input data-ef="expenses" type="number" value="4200" min="0" /></label>
+              <label>Target months <input data-ef="months" type="number" value="3" min="1" /></label>
+              <label>Current savings <input data-ef="current" type="number" value="1000" min="0" /></label>
+              <label>Monthly contribution <input data-ef="contribution" type="number" value="250" min="0" /></label>
+            </div>
+            <div class="calc-output" id="efOutput"></div>
+            <button data-add="emergency" type="button">Add To Calendar</button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Primary">
+      <button class="active" data-nav="daily" type="button">Daily</button>
+      <button data-nav="monthly" type="button">Monthly</button>
+      <button data-nav="yearly" type="button">Yearly</button>
+      <button data-nav="scenarios" type="button">Scenarios</button>
+      <button data-nav="calculators" type="button">Calculators</button>
+    </nav>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
