@@ -149,6 +149,7 @@
             <input id="importJson" type="file" accept="application/json" />
           </label>
           <button id="copySummary" type="button">Copy Summary</button>
+          <button id="printReport" type="button">Create PDF Report</button>
           <button id="resetData" class="danger-button" type="button">Reset Data</button>
         </section>
       </div>
@@ -312,6 +313,7 @@
       <p><a href="privacy.html">Privacy</a> <span aria-hidden="true">|</span> <a href="terms.html">Terms</a></p>
     </footer>
 
+    <section id="printReportOutput" class="print-report" aria-hidden="true"></section>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <script src="app.js"></script>
   </body>

@@ -134,4 +134,21 @@ assert.equal(app.signedMoneyValue("-25"), -25);
   assert.equal(schedule[schedule.length - 1].amount, 60);
 }
 
+{
+  const result = forecast(
+    [
+      { name: "Paycheck", amount: 2500, type: "income", startDate: "2026-01-02", recurrence: "none" },
+      { name: "Rent", amount: 1200, type: "expense", startDate: "2026-01-03", recurrence: "none" },
+    ],
+    { balance: 1000, days: 31 }
+  );
+  const report = app.buildReportModel(result);
+
+  assert.equal(report.openingBalance, 1000);
+  assert.equal(report.upcomingEvents.length, 2);
+  assert.equal(report.nextIncome.date, "2026-01-02");
+  assert.equal(report.totalIncome, 2500);
+  assert.equal(report.totalExpenses, 1200);
+}
+
 console.log("forecast-engine tests passed");

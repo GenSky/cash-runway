@@ -804,6 +804,10 @@ input[type="range"] {
   line-height: 1.6;
 }
 
+.print-report {
+  display: none;
+}
+
 .event-manager {
   padding-top: 16px;
 }
@@ -1169,6 +1173,7 @@ input[type="range"] {
   }
 
   .workspace-rail .data-actions #copySummary,
+  .workspace-rail .data-actions #printReport,
   .workspace-rail .data-actions #resetData {
     grid-column: 1 / -1;
   }
@@ -1287,5 +1292,139 @@ input[type="range"] {
 
   .table-wrap {
     max-height: 62vh;
+  }
+}
+
+@media print {
+  @page {
+    margin: 0.5in;
+  }
+
+  body {
+    background: #fff;
+    color: #111827;
+    padding: 0;
+  }
+
+  body > :not(.print-report) {
+    display: none !important;
+  }
+
+  .print-report {
+    display: block;
+    color: #111827;
+    font-size: 11px;
+  }
+
+  .print-report article {
+    display: grid;
+    gap: 16px;
+  }
+
+  .print-report h1,
+  .print-report h2,
+  .print-report p {
+    margin: 0;
+  }
+
+  .print-report h1 {
+    font-size: 24px;
+  }
+
+  .print-report h2 {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .print-report .report-header {
+    border-bottom: 2px solid #0f766e;
+    padding-bottom: 12px;
+  }
+
+  .print-report .eyebrow {
+    color: #0f766e;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .report-callout {
+    border: 1px solid #d1d5db;
+    border-left: 5px solid #0f766e;
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .report-callout.caution {
+    border-left-color: #ca8a04;
+  }
+
+  .report-callout.danger {
+    border-left-color: #dc2626;
+  }
+
+  .report-callout span,
+  .report-grid span {
+    color: #4b5563;
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .report-callout strong {
+    display: block;
+    font-size: 22px;
+    margin-top: 4px;
+  }
+
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .report-grid div {
+    border: 1px solid #d1d5db;
+    padding: 9px;
+  }
+
+  .report-grid strong {
+    display: block;
+    font-size: 15px;
+    margin-top: 4px;
+  }
+
+  .report-grid small {
+    color: #4b5563;
+    display: block;
+    margin-top: 3px;
+  }
+
+  .print-report table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .print-report th,
+  .print-report td {
+    border: 1px solid #d1d5db;
+    padding: 6px;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .print-report th {
+    background: #f3f4f6;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+
+  .print-report footer {
+    border-top: 1px solid #d1d5db;
+    color: #4b5563;
+    padding-top: 10px;
   }
 }

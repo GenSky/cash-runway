@@ -92,6 +92,8 @@ function bindElements() {
     "exportJson",
     "importJson",
     "copySummary",
+    "printReport",
+    "printReportOutput",
     "resetData",
     "applyScenario",
     "stressTest",
@@ -165,6 +167,7 @@ function bindEvents() {
   els.exportJson.addEventListener("click", exportJson);
   els.importJson.addEventListener("change", importJson);
   els.copySummary.addEventListener("click", copySummary);
+  els.printReport.addEventListener("click", printPdfReport);
   els.resetData.addEventListener("click", resetData);
   els.applyScenario.addEventListener("click", applyScenario);
   els.stressTest.addEventListener("click", runStressTests);
@@ -1225,6 +1228,132 @@ async function copySummary() {
   } catch {
     toast(text);
   }
+}
+
+function printPdfReport() {
+  const forecast = generateForecast(state);
+  const report = buildReportModel(forecast);
+  els.printReportOutput.innerHTML = renderReportHtml(report);
+  els.printReportOutput.setAttribute("aria-hidden", "false");
+  window.print();
+  window.setTimeout(() => els.printReportOutput.setAttribute("aria-hidden", "true"), 300);
+  toast("PDF report ready. Choose Save as PDF in the print dialog.");
+}
+
+function buildReportModel(forecast) {
+  const eventDays = forecast.daily.filter((day) => day.events.length > 0);
+  const lowest = forecast.daily.reduce((min, day) => (day.endingBalance < min.endingBalance ? day : min), forecast.daily[0]);
+  const nextIncome = forecast.daily.find((day) => day.events.some((event) => event.type === "income"));
+  const nextNegative = forecast.daily.find((day) => day.endingBalance < 0);
+  const totalIncome = sum(forecast.monthly, "income");
+  const totalExpenses = sum(forecast.monthly, "expenses");
+  const monthly = forecast.monthly.slice(0, 12);
+
+  return {
+    createdAt: new Date(),
+    openingBalance: forecast.openingBalance,
+    yearEndBalance: forecast.yearly.yearEndBalance,
+    netChange: forecast.yearly.yearEndBalance - forecast.openingBalance,
+    lowest,
+    score: forecast.score,
+    eventDays,
+    nextIncome,
+    nextNegative,
+    totalIncome,
+    totalExpenses,
+    monthly,
+    upcomingEvents: eventDays
+      .flatMap((day) =>
+        day.events.map((event) => ({
+          date: day.date,
+          name: event.name,
+          type: event.type,
+          signedAmount: event.signedAmount,
+          endingBalance: day.endingBalance,
+        }))
+      )
+      .slice(0, 12),
+  };
+}
+
+function renderReportHtml(report) {
+  const riskLine = report.nextNegative
+    ? `First projected negative day is ${formatDate(report.nextNegative.date)}.`
+    : "No negative-balance day appears in the current forecast window.";
+  const nextIncomeLine = report.nextIncome
+    ? `${formatDate(report.nextIncome.date)} at ${formatMoney(sum(report.nextIncome.events.filter((event) => event.type === "income"), "signedAmount"))}`
+    : "No upcoming income event in this forecast window.";
+  const upcomingEvents = report.upcomingEvents.length
+    ? report.upcomingEvents
+        .map(
+          (event) => `<tr>
+            <td>${formatDate(event.date)}</td>
+            <td>${escapeHtml(event.name)}</td>
+            <td>${titleCase(event.type)}</td>
+            <td>${formatMoney(event.signedAmount)}</td>
+            <td>${formatMoney(event.endingBalance)}</td>
+          </tr>`
+        )
+        .join("")
+    : `<tr><td colspan="5">No forecast events added yet.</td></tr>`;
+  const monthlyRows = report.monthly
+    .map(
+      (month) => `<tr>
+        <td>${formatMonth(month.month)}</td>
+        <td>${formatMoney(month.income)}</td>
+        <td>${formatMoney(month.expenses)}</td>
+        <td>${formatMoney(month.lowestBalance)}</td>
+        <td>${formatMoney(month.endingBalance)}</td>
+      </tr>`
+    )
+    .join("");
+
+  return `<article>
+    <header class="report-header">
+      <p class="eyebrow">Cash Runway Report</p>
+      <h1>Cash-flow forecast summary</h1>
+      <p>Created ${report.createdAt.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>
+    </header>
+
+    <section class="report-callout ${report.score.status.toLowerCase()}">
+      <div>
+        <span>Runway status</span>
+        <strong>${report.score.status}</strong>
+      </div>
+      <p>${escapeHtml(report.score.explanation)} ${riskLine}</p>
+    </section>
+
+    <section class="report-grid">
+      <div><span>Opening balance</span><strong>${formatMoney(report.openingBalance)}</strong></div>
+      <div><span>Year-end projection</span><strong>${formatMoney(report.yearEndBalance)}</strong></div>
+      <div><span>Net change</span><strong>${formatMoney(report.netChange)}</strong></div>
+      <div><span>Lowest balance</span><strong>${formatMoney(report.lowest.endingBalance)}</strong><small>${formatDate(report.lowest.date)}</small></div>
+      <div><span>Forecast income</span><strong>${formatMoney(report.totalIncome)}</strong></div>
+      <div><span>Forecast expenses</span><strong>${formatMoney(report.totalExpenses)}</strong></div>
+      <div><span>Negative days</span><strong>${report.score.negativeDays}</strong></div>
+      <div><span>Next income</span><strong>${nextIncomeLine}</strong></div>
+    </section>
+
+    <section>
+      <h2>Upcoming events</h2>
+      <table>
+        <thead><tr><th>Date</th><th>Event</th><th>Type</th><th>Amount</th><th>Day ending balance</th></tr></thead>
+        <tbody>${upcomingEvents}</tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>Monthly outlook</h2>
+      <table>
+        <thead><tr><th>Month</th><th>Income</th><th>Expenses</th><th>Lowest</th><th>Ending</th></tr></thead>
+        <tbody>${monthlyRows}</tbody>
+      </table>
+    </section>
+
+    <footer>
+      <p>Cash Runway is a planning tool, not financial advice. Forecasts are estimates based on the information entered in this browser.</p>
+    </footer>
+  </article>`;
 }
 
 function switchView(view) {
