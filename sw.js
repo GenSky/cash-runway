@@ -1,5 +1,14 @@
-const CACHE_NAME = "cash-runway-v13";
-const APP_SHELL = ["./", "./index.html", "./styles.css", "./app.js", "./manifest.json", "./icon.svg"];
+const CACHE_NAME = "cash-runway-v15";
+const APP_SHELL = [
+  "./",
+  "./index.html",
+  "./privacy.html",
+  "./terms.html",
+  "./styles.css",
+  "./app.js",
+  "./manifest.json",
+  "./icon.svg",
+];
 
 function cacheFreshResponse(request) {
   return fetch(request).then((response) => {

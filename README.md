@@ -27,10 +27,12 @@ Cash Runway is a static, offline-capable PWA for forecasting account balances ac
 The app is intentionally dependency-free:
 
 - `index.html` defines the static application shell.
+- `privacy.html` and `terms.html` provide the current static-app privacy and use disclosures.
 - `styles.css` provides mobile-first responsive UI.
 - `app.js` contains state management, the forecast engine, scenario logic, calculators, rendering, import/export, and PWA registration.
 - `manifest.json` enables installable app behavior.
 - `sw.js` caches the application shell for offline use.
+- `tests/forecast-engine.test.js` covers the highest-risk forecast and calculator behavior.
 
 All user data is stored in the browser through LocalStorage under `cash-runway-v1`. There is no backend, database, authentication layer, or paid API.
 
@@ -40,7 +42,7 @@ The forecast engine is centered on `generateForecast(plan, options)` in `app.js`
 
 It:
 
-1. Starts with the current account balance.
+1. Starts with the current account balance, adjusted by prior one-time events dated before the forecast start.
 2. Expands one-time and recurring events across a daily 365-day timeline.
 3. Applies scenario-only adjustments without mutating saved data.
 4. Applies each day's income and expenses to the running balance.
@@ -72,6 +74,14 @@ http://localhost:4173
 
 No install step is required.
 
+Run the regression tests with:
+
+```bash
+npm test
+```
+
+The tests use Node's built-in modules only; there are no package dependencies.
+
 ## GitHub Pages Deployment
 
 This project is GitHub Pages compatible because it is static HTML/CSS/JavaScript.
@@ -101,7 +111,7 @@ https://<github-username>.github.io/cash-runway/
 - More calculator depth for APR and amortization
 - Optional encrypted backup file
 - Accessibility audit with screen reader testing
-- Automated unit tests for recurrence and score calculations
+- Broader automated tests for rendering and import/export flows
 
 ## License
 

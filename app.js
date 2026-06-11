@@ -110,7 +110,7 @@ function bindElements() {
 function bindEvents() {
   els.balanceForm.addEventListener("submit", (event) => {
     event.preventDefault();
-    state.currentBalance = moneyValue(els.currentBalance.value);
+    state.currentBalance = signedMoneyValue(els.currentBalance.value);
     state.forecastYears = forecastYearsValue(els.forecastYears.value);
     saveState();
     renderAll();
@@ -945,23 +945,51 @@ function renderBalanceTransfer() {
 function renderSnowball() {
   const debts = readDebts().sort((a, b) => a.balance - b.balance);
   const extra = moneyValue(document.getElementById("snowballExtra").value);
-  let month = 0;
-  let totalPaid = 0;
-  const schedule = [];
-  debts.forEach((debt, index) => {
-    const payment = debt.min + (index === 0 ? extra : 0);
-    const months = payment > 0 ? Math.ceil(debt.balance / payment) : 0;
-    for (let i = 0; i < months; i += 1) {
-      schedule.push({ name: `Debt snowball: ${debt.name}`, amount: Math.min(payment, debt.balance - i * payment) });
-    }
-    month += months;
-    totalPaid += debt.balance;
-  });
+  const schedule = buildSnowballSchedule(debts, extra);
+  const totalPaid = sum(debts, "balance");
   els.snowballOutput.innerHTML = `
     <strong>Payoff order:</strong> ${debts.map((debt) => escapeHtml(debt.name)).join(", ") || "Add debts"}.<br>
-    <strong>Estimated payoff:</strong> ${month || 0} months.<br>
+    <strong>Estimated payoff:</strong> ${schedule.length || 0} months.<br>
     <strong>Principal scheduled:</strong> ${formatMoney(totalPaid)}.`;
   els.snowballOutput.dataset.schedule = JSON.stringify(schedule);
+}
+
+function buildSnowballSchedule(debts, extra) {
+  const balances = debts.map((debt) => ({
+    name: debt.name,
+    balance: roundMoney(debt.balance),
+    min: roundMoney(debt.min),
+  }));
+  const schedule = [];
+
+  while (balances.some((debt) => debt.balance > 0) && schedule.length < 600) {
+    const activeAtStart = balances.filter((debt) => debt.balance > 0);
+    const freedMinimums = balances
+      .filter((debt) => debt.balance <= 0)
+      .reduce((total, debt) => total + debt.min, 0);
+    let additionalPayment = extra + freedMinimums;
+    let monthlyPayment = 0;
+
+    activeAtStart.forEach((debt) => {
+      const payment = Math.min(debt.min, debt.balance);
+      debt.balance = roundMoney(debt.balance - payment);
+      monthlyPayment += payment;
+    });
+
+    while (additionalPayment > 0) {
+      const target = balances.find((debt) => debt.balance > 0);
+      if (!target) break;
+      const payment = Math.min(additionalPayment, target.balance);
+      target.balance = roundMoney(target.balance - payment);
+      monthlyPayment += payment;
+      additionalPayment = roundMoney(additionalPayment - payment);
+    }
+
+    if (monthlyPayment <= 0) break;
+    schedule.push({ name: "Debt snowball payment", amount: roundMoney(monthlyPayment) });
+  }
+
+  return schedule;
 }
 
 function renderCarPayment() {
@@ -1166,6 +1194,8 @@ async function importJson(event) {
 }
 
 function resetData() {
+  const hasPlan = state.currentBalance || state.events.length;
+  if (hasPlan && !window.confirm("Reset your balance and all saved forecast events?")) return;
   state.currentBalance = 0;
   state.forecastYears = DEFAULT_FORECAST_YEARS;
   state.events = [];
@@ -1258,6 +1288,10 @@ function sum(items, key) {
 
 function moneyValue(value) {
   return Math.max(0, Number(value) || 0);
+}
+
+function signedMoneyValue(value) {
+  return Number(value) || 0;
 }
 
 function forecastYearsValue(value) {
