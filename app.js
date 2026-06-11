@@ -1238,11 +1238,20 @@ function printPdfReport() {
   els.printReportOutput.innerHTML = renderReportHtml(report);
   els.printReportOutput.setAttribute("aria-hidden", "false");
   window.print();
-  window.setTimeout(() => {
+  scheduleReportCleanup(originalTitle);
+  toast("PDF report ready. Choose Save as PDF in the print dialog.");
+}
+
+function scheduleReportCleanup(originalTitle) {
+  window.clearTimeout(window.reportCleanupTimer);
+
+  const cleanup = () => {
     els.printReportOutput.setAttribute("aria-hidden", "true");
     document.title = originalTitle;
-  }, 300);
-  toast("PDF report ready. Choose Save as PDF in the print dialog.");
+    window.reportCleanupTimer = null;
+  };
+
+  window.reportCleanupTimer = window.setTimeout(cleanup, 120000);
 }
 
 function reportFilename(date = new Date()) {
