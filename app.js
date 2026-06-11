@@ -323,7 +323,8 @@ function generateForecast(plan, options = {}) {
   const days = options.days || getForecastDays(plan);
   const scenarioEvents = buildScenarioEvents(plan, scenario, startDate, days);
   const allEvents = [...plan.events.map(normalizeEvent), ...scenarioEvents];
-  let balance = Number(plan.currentBalance) || 0;
+  const openingBalance = calculateOpeningBalance(plan.currentBalance, allEvents, startDate);
+  let balance = openingBalance;
   const daily = [];
 
   for (let offset = 0; offset < days; offset += 1) {
@@ -358,10 +359,22 @@ function generateForecast(plan, options = {}) {
     });
   }
 
-  const monthly = summarizeMonthly(daily, plan.currentBalance);
+  const monthly = summarizeMonthly(daily, openingBalance);
   const yearly = summarizeYearly(monthly, daily);
-  const score = calculateRunwayScore(daily, monthly, plan.currentBalance);
-  return { daily, monthly, yearly, score };
+  const score = calculateRunwayScore(daily, monthly, openingBalance);
+  return { daily, monthly, yearly, score, openingBalance };
+}
+
+function calculateOpeningBalance(currentBalance, events, startDate) {
+  return roundMoney(
+    events.reduce((balance, event) => {
+      if (event.recurrence !== "none" || event.scenarioEvent) return balance;
+      if (parseDate(event.startDate) >= startDate) return balance;
+
+      const amount = Math.abs(Number(event.amount) || 0);
+      return balance + (event.type === "income" ? amount : -amount);
+    }, Number(currentBalance) || 0)
+  );
 }
 
 function applyScenarioToOccurrence(event, scenario, date, startDate) {
