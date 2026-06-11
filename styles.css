@@ -1313,12 +1313,13 @@ input[type="range"] {
   .print-report {
     display: block;
     color: #111827;
-    font-size: 11px;
+    font-size: 10px;
+    line-height: 1.35;
   }
 
   .print-report article {
     display: grid;
-    gap: 16px;
+    gap: 12px;
   }
 
   .print-report h1,
@@ -1328,7 +1329,7 @@ input[type="range"] {
   }
 
   .print-report h1 {
-    font-size: 24px;
+    font-size: 22px;
   }
 
   .print-report h2 {
@@ -1352,9 +1353,10 @@ input[type="range"] {
     border: 1px solid #d1d5db;
     border-left: 5px solid #0f766e;
     display: grid;
-    grid-template-columns: 170px 1fr;
-    gap: 12px;
-    padding: 12px;
+    grid-template-columns: 125px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+    page-break-inside: avoid;
   }
 
   .report-callout.caution {
@@ -1376,25 +1378,32 @@ input[type="range"] {
 
   .report-callout strong {
     display: block;
-    font-size: 22px;
+    font-size: 18px;
     margin-top: 4px;
+  }
+
+  .report-callout p {
+    overflow-wrap: anywhere;
   }
 
   .report-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .report-grid div {
     border: 1px solid #d1d5db;
-    padding: 9px;
+    min-width: 0;
+    padding: 7px;
+    page-break-inside: avoid;
   }
 
   .report-grid strong {
     display: block;
-    font-size: 15px;
+    font-size: 13px;
     margin-top: 4px;
+    overflow-wrap: anywhere;
   }
 
   .report-grid small {
@@ -1405,21 +1414,55 @@ input[type="range"] {
 
   .print-report table {
     border-collapse: collapse;
+    table-layout: fixed;
     width: 100%;
+  }
+
+  .print-report thead {
+    display: table-row-group;
   }
 
   .print-report th,
   .print-report td {
     border: 1px solid #d1d5db;
-    padding: 6px;
+    overflow-wrap: anywhere;
+    padding: 5px;
     text-align: left;
     vertical-align: top;
   }
 
   .print-report th {
     background: #f3f4f6;
-    font-size: 9px;
+    font-size: 8px;
     text-transform: uppercase;
+  }
+
+  .print-report tr,
+  .print-report section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-report th:nth-child(1),
+  .print-report td:nth-child(1) {
+    width: 20%;
+  }
+
+  .print-report th:nth-child(2),
+  .print-report td:nth-child(2) {
+    width: 28%;
+  }
+
+  .print-report th:nth-child(3),
+  .print-report td:nth-child(3) {
+    width: 15%;
+  }
+
+  .print-report th:nth-child(4),
+  .print-report td:nth-child(4),
+  .print-report th:nth-child(5),
+  .print-report td:nth-child(5) {
+    width: 18.5%;
   }
 
   .print-report footer {

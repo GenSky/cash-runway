@@ -149,6 +149,7 @@ assert.equal(app.signedMoneyValue("-25"), -25);
   assert.equal(report.nextIncome.date, "2026-01-02");
   assert.equal(report.totalIncome, 2500);
   assert.equal(report.totalExpenses, 1200);
+  assert.ok(app.renderReportHtml(report).includes("<th>Ending</th>"));
 }
 
 console.log("forecast-engine tests passed");

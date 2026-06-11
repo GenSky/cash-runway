@@ -1281,7 +1281,7 @@ function renderReportHtml(report) {
     ? `First projected negative day is ${formatDate(report.nextNegative.date)}.`
     : "No negative-balance day appears in the current forecast window.";
   const nextIncomeLine = report.nextIncome
-    ? `${formatDate(report.nextIncome.date)} at ${formatMoney(sum(report.nextIncome.events.filter((event) => event.type === "income"), "signedAmount"))}`
+    ? `${formatDate(report.nextIncome.date)}<small>${formatMoney(sum(report.nextIncome.events.filter((event) => event.type === "income"), "signedAmount"))}</small>`
     : "No upcoming income event in this forecast window.";
   const upcomingEvents = report.upcomingEvents.length
     ? report.upcomingEvents
@@ -1337,7 +1337,7 @@ function renderReportHtml(report) {
     <section>
       <h2>Upcoming events</h2>
       <table>
-        <thead><tr><th>Date</th><th>Event</th><th>Type</th><th>Amount</th><th>Day ending balance</th></tr></thead>
+        <thead><tr><th>Date</th><th>Event</th><th>Type</th><th>Amount</th><th>Ending</th></tr></thead>
         <tbody>${upcomingEvents}</tbody>
       </table>
     </section>
