@@ -1,67 +1,73 @@
 :root {
   color-scheme: light;
-  --bg: #f5f7f4;
-  --bg-strong: #e9f0ec;
-  --panel: #ffffff;
+  --bg: #f7f2e8;
+  --bg-strong: #fff6d7;
+  --panel: #fffaf0;
   --field: #ffffff;
-  --table: #ffffff;
-  --soft: #f8faf9;
-  --soft-2: #fbfdfc;
-  --chip: #edf2f7;
-  --calendar-outside: #f7faf8;
-  --nav-bg: rgba(255, 255, 255, 0.96);
-  --toast-bg: #111827;
-  --ink: #16211f;
-  --muted: #61706d;
-  --muted-strong: #9aa7a3;
-  --line: #dce5df;
-  --line-strong: #c8d6cf;
-  --safe: #0f766e;
-  --safe-soft: #d8f4ed;
-  --caution: #b7791f;
-  --caution-soft: #fff3cd;
-  --danger: #b42318;
-  --danger-soft: #ffe2df;
-  --blue: #1d4ed8;
-  --blue-soft: #dbeafe;
-  --plum: #6d3f5b;
-  --plum-soft: #f2e8f0;
-  --shadow: 0 16px 40px rgba(24, 38, 35, 0.09);
-  --shadow-soft: 0 8px 24px rgba(24, 38, 35, 0.06);
-  --radius: 8px;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --table: #fffdf6;
+  --soft: #fff6d7;
+  --soft-2: #fffaf0;
+  --chip: #ffffff;
+  --calendar-outside: #f1eadc;
+  --nav-bg: rgba(255, 250, 240, 0.98);
+  --toast-bg: #0b0f0c;
+  --ink: #0b0f0c;
+  --muted: #4f5e58;
+  --muted-strong: #89958f;
+  --line: #0b0f0c;
+  --line-strong: #0b0f0c;
+  --safe: #23a094;
+  --safe-soft: #bdf3e6;
+  --caution: #7a5700;
+  --caution-soft: #ffc900;
+  --danger: #c1281d;
+  --danger-soft: #ffd8d2;
+  --blue: #315cec;
+  --blue-soft: #d7e3ff;
+  --plum: #6f44b7;
+  --plum-soft: #d8c7ff;
+  --pink: #ff90e8;
+  --coral: #ff7051;
+  --mint: #90ee90;
+  --cream: #fffaf0;
+  --shadow: 6px 6px 0 var(--line);
+  --shadow-soft: 4px 4px 0 var(--line);
+  --radius: 2px;
+  font-family: Arial, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0b1110;
-  --bg-strong: #17211e;
-  --panel: #151d1a;
-  --field: #101815;
-  --table: #121a17;
-  --soft: #101815;
-  --soft-2: #111916;
-  --chip: #22302c;
-  --calendar-outside: #0f1714;
-  --nav-bg: rgba(18, 26, 23, 0.96);
-  --toast-bg: #e7f0ed;
-  --ink: #eef6f3;
-  --muted: #9fb1ab;
-  --muted-strong: #657871;
-  --line: #293834;
-  --line-strong: #3b514b;
-  --safe: #2dd4bf;
-  --safe-soft: #103d36;
-  --caution: #f6c453;
-  --caution-soft: #3c2f12;
-  --danger: #ff8a80;
-  --danger-soft: #3f1716;
-  --blue: #93c5fd;
-  --blue-soft: #172c4d;
-  --plum: #d8b4fe;
-  --plum-soft: #342044;
-  --shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
-  --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.26);
+  --bg: #0f0d0a;
+  --bg-strong: #1c1712;
+  --panel: #1a1612;
+  --field: #0f0d0a;
+  --table: #14110e;
+  --soft: #261f18;
+  --soft-2: #1f1a15;
+  --chip: #fffaf0;
+  --calendar-outside: #0b0a08;
+  --nav-bg: rgba(26, 22, 18, 0.98);
+  --toast-bg: #fffaf0;
+  --ink: #fffaf0;
+  --muted: #dfd3c0;
+  --muted-strong: #938776;
+  --line: #fffaf0;
+  --line-strong: #fffaf0;
+  --safe: #35dcc8;
+  --safe-soft: #064b43;
+  --caution: #ffc900;
+  --caution-soft: #493a00;
+  --danger: #ff8673;
+  --danger-soft: #4a1711;
+  --blue: #9fc2ff;
+  --blue-soft: #1d3970;
+  --plum: #d9c7ff;
+  --plum-soft: #34235d;
+  --pink: #ff90e8;
+  --coral: #ff7051;
+  --mint: #90ee90;
+  --cream: #fffaf0;
 }
 
 :root[data-theme="dark"] button,
@@ -124,6 +130,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
+    radial-gradient(circle at 0 0, rgba(11, 15, 12, 0.08) 0 1px, transparent 1px 24px),
     linear-gradient(180deg, var(--bg-strong) 0, var(--bg) 280px),
     var(--bg);
   color: var(--ink);
@@ -1292,6 +1299,462 @@ input[type="range"] {
 
   .table-wrap {
     max-height: 62vh;
+  }
+}
+
+/* Gumroad-inspired presentation layer. Kept late in the cascade so it can
+   restyle the current app without changing forecast, report, or PWA logic. */
+button,
+.file-button {
+  border: 3px solid var(--line);
+  background: var(--pink);
+  color: var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+  font-weight: 900;
+}
+
+button:hover,
+.file-button:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--line);
+}
+
+.icon-button {
+  background: var(--ink);
+  color: var(--panel);
+}
+
+:root[data-theme="dark"] .icon-button {
+  background: var(--cream);
+  color: #0f0d0a;
+}
+
+.ghost-button,
+.delete-button {
+  border: 3px solid var(--line);
+  background: var(--field);
+  color: var(--ink);
+}
+
+.danger-button,
+.delete-button:hover {
+  background: var(--coral);
+  color: var(--ink);
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+.file-button:focus-within,
+a:focus-visible {
+  outline: 4px solid var(--blue);
+  outline-offset: 3px;
+}
+
+input,
+select,
+textarea {
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 2px 2px 0 var(--line);
+  font-weight: 700;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--line);
+}
+
+label,
+.field-help,
+.balance-card small,
+.section-heading p:last-child,
+.calendar-meta {
+  color: var(--muted);
+}
+
+.app-header {
+  align-items: center;
+}
+
+.app-header h1 {
+  font-weight: 950;
+}
+
+.eyebrow {
+  color: var(--safe);
+  font-weight: 950;
+}
+
+.bottom-nav,
+.balance-card,
+.score-card,
+.control-panel,
+.data-actions,
+.content-panel,
+.calculator-card,
+.metric-card,
+.slider-card,
+.legal-page section,
+.table-wrap,
+.calendar-grid,
+.bar-graph,
+.line-graph,
+.calc-output,
+.saved-event {
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.bottom-nav {
+  background: var(--panel);
+  backdrop-filter: none;
+}
+
+.bottom-nav button {
+  border: 2px solid transparent;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink);
+  font-weight: 950;
+}
+
+.bottom-nav button:hover {
+  box-shadow: none;
+}
+
+.bottom-nav button.active {
+  border-color: var(--line);
+  background: var(--safe);
+  color: var(--ink);
+  box-shadow: 3px 3px 0 var(--line);
+}
+
+.balance-card {
+  position: relative;
+  overflow: hidden;
+  border-top: 3px solid var(--line);
+  background:
+    linear-gradient(135deg, transparent 0 72%, rgba(255, 144, 232, 0.72) 72% 78%, transparent 78%),
+    var(--caution-soft);
+}
+
+.score-card {
+  border-top: 3px solid var(--line);
+  background: var(--plum-soft);
+}
+
+.balance-card span,
+.score-card span {
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.balance-card strong,
+.score-card strong {
+  font-weight: 950;
+}
+
+.control-panel {
+  background:
+    linear-gradient(90deg, var(--mint) 0 10px, transparent 10px),
+    var(--panel);
+}
+
+.data-actions {
+  background: var(--blue-soft);
+}
+
+.content-panel {
+  background: var(--panel);
+}
+
+.table-wrap {
+  background: var(--table);
+  box-shadow: var(--shadow);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+th,
+td {
+  border-bottom: 3px solid var(--line);
+}
+
+th {
+  background: var(--soft);
+  color: var(--ink);
+  font-weight: 950;
+}
+
+td {
+  background: var(--table);
+}
+
+th:first-child,
+td:first-child {
+  box-shadow: 3px 0 0 var(--line);
+}
+
+.status-pill,
+.event-chip,
+.event-type,
+.event-meta span,
+.calendar-event,
+.calendar-more {
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 2px 2px 0 var(--line);
+  font-weight: 950;
+}
+
+.safe,
+.status-pill.safe {
+  color: var(--ink);
+  background: var(--safe-soft);
+}
+
+.caution,
+.status-pill.caution {
+  color: var(--ink);
+  background: var(--caution-soft);
+}
+
+.status-pill.danger {
+  color: var(--ink);
+  background: var(--danger-soft);
+}
+
+.event-chip.income,
+.calendar-event.income,
+.event-type.income {
+  background: var(--safe);
+  color: var(--ink);
+}
+
+.event-chip.expense,
+.calendar-event.expense,
+.event-type.expense {
+  background: var(--blue-soft);
+  color: var(--blue);
+}
+
+.saved-event {
+  border-left-width: 8px;
+  background: var(--table);
+}
+
+.saved-event.income {
+  border-left-color: var(--safe);
+}
+
+.saved-event.expense {
+  border-left-color: var(--blue);
+}
+
+.event-actions button {
+  background: var(--field);
+}
+
+.event-actions .delete-button {
+  background: var(--danger-soft);
+}
+
+.metric-card,
+.slider-card {
+  background: var(--soft-2);
+}
+
+.bar-graph,
+.line-graph {
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 34px, rgba(11, 15, 12, 0.18) 35px),
+    var(--soft);
+}
+
+.bar-fill {
+  border: 3px solid var(--line);
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--safe);
+  box-shadow: 3px 0 0 var(--line);
+}
+
+.bar-fill.negative {
+  background: var(--coral);
+}
+
+.calculator-card {
+  position: relative;
+  overflow: hidden;
+  padding: 124px 14px 14px;
+  background: var(--panel);
+}
+
+.calculator-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 104px;
+  border-bottom: 3px solid var(--line);
+  background:
+    linear-gradient(135deg, transparent 0 34%, rgba(255, 255, 255, 0.5) 34% 39%, transparent 39%),
+    repeating-linear-gradient(45deg, rgba(11, 15, 12, 0.12) 0 8px, transparent 8px 16px),
+    var(--pink);
+}
+
+.calculator-card:nth-child(2n)::before {
+  background:
+    linear-gradient(135deg, transparent 0 34%, rgba(255, 255, 255, 0.5) 34% 39%, transparent 39%),
+    repeating-linear-gradient(45deg, rgba(11, 15, 12, 0.12) 0 8px, transparent 8px 16px),
+    var(--mint);
+}
+
+.calculator-card:nth-child(3n)::before {
+  background:
+    linear-gradient(135deg, transparent 0 34%, rgba(255, 255, 255, 0.5) 34% 39%, transparent 39%),
+    repeating-linear-gradient(45deg, rgba(11, 15, 12, 0.12) 0 8px, transparent 8px 16px),
+    var(--plum-soft);
+}
+
+.calculator-card:nth-child(4n)::before {
+  background:
+    linear-gradient(135deg, transparent 0 34%, rgba(255, 255, 255, 0.5) 34% 39%, transparent 39%),
+    repeating-linear-gradient(45deg, rgba(11, 15, 12, 0.12) 0 8px, transparent 8px 16px),
+    var(--caution-soft);
+}
+
+.calculator-card::after {
+  content: "Free tool";
+  position: absolute;
+  left: 14px;
+  top: 66px;
+  z-index: 1;
+  border: 2px solid var(--line);
+  background: var(--panel);
+  color: var(--ink);
+  padding: 5px 8px;
+  font-size: 0.76rem;
+  font-weight: 950;
+  box-shadow: 3px 3px 0 var(--line);
+}
+
+.calculator-card h3 {
+  font-size: 1.25rem;
+  font-weight: 950;
+}
+
+.calc-output,
+.empty-state {
+  border: 3px dashed var(--line);
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.calendar-grid {
+  background: var(--line);
+  gap: 3px;
+  overflow: hidden;
+}
+
+.calendar-weekday,
+.calendar-day {
+  border: 0;
+}
+
+.calendar-weekday {
+  background: var(--caution-soft);
+  color: var(--ink);
+}
+
+.calendar-day {
+  background: var(--table);
+}
+
+.calendar-day.outside-month {
+  background: var(--calendar-outside);
+}
+
+.calendar-day.today {
+  box-shadow: inset 0 0 0 4px var(--pink);
+}
+
+.calendar-balance {
+  color: var(--ink);
+}
+
+.toast {
+  border: 3px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--panel);
+}
+
+:root[data-theme="dark"] .toast {
+  color: #0f0d0a;
+}
+
+:root[data-theme="dark"] .event-chip.expense,
+:root[data-theme="dark"] .calendar-event.expense,
+:root[data-theme="dark"] .event-type.expense {
+  color: #f4f8ff;
+}
+
+:root[data-theme="dark"] button,
+:root[data-theme="dark"] .file-button,
+:root[data-theme="dark"] .status-pill.safe,
+:root[data-theme="dark"] .status-pill.caution,
+:root[data-theme="dark"] .status-pill.danger,
+:root[data-theme="dark"] .calendar-weekday {
+  color: #0f0d0a;
+}
+
+:root[data-theme="dark"] .ghost-button,
+:root[data-theme="dark"] .delete-button,
+:root[data-theme="dark"] .bottom-nav button,
+:root[data-theme="dark"] input,
+:root[data-theme="dark"] select,
+:root[data-theme="dark"] textarea,
+:root[data-theme="dark"] .balance-card span,
+:root[data-theme="dark"] .score-card span,
+:root[data-theme="dark"] .calc-output,
+:root[data-theme="dark"] .empty-state {
+  color: var(--ink);
+}
+
+:root[data-theme="dark"] .balance-card {
+  background:
+    linear-gradient(135deg, transparent 0 72%, rgba(255, 144, 232, 0.24) 72% 78%, transparent 78%),
+    #2d2500;
+}
+
+:root[data-theme="dark"] .score-card {
+  background: var(--plum-soft);
+}
+
+@media (min-width: 720px) {
+  .calculator-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .calculator-card {
+    padding: 104px 10px 10px;
+  }
+
+  .calculator-card::before {
+    height: 88px;
+  }
+
+  .calculator-card::after {
+    top: 54px;
   }
 }
 
