@@ -315,7 +315,7 @@ function applyTheme() {
   els.themeToggle.textContent = isDark ? "Light" : "Dark";
   els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
   els.themeToggle.setAttribute("aria-pressed", String(isDark));
-  els.themeColor.content = isDark ? "#0b1110" : "#0f766e";
+  els.themeColor.content = isDark ? "#0f0d0a" : "#ff90e8";
 }
 
 // Forecasting is deliberately data-first: every view, stress test, and calculator
