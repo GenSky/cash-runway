@@ -1233,11 +1233,25 @@ async function copySummary() {
 function printPdfReport() {
   const forecast = generateForecast(state);
   const report = buildReportModel(forecast);
+  const originalTitle = document.title;
+  document.title = reportFilename(report.createdAt);
   els.printReportOutput.innerHTML = renderReportHtml(report);
   els.printReportOutput.setAttribute("aria-hidden", "false");
   window.print();
-  window.setTimeout(() => els.printReportOutput.setAttribute("aria-hidden", "true"), 300);
+  window.setTimeout(() => {
+    els.printReportOutput.setAttribute("aria-hidden", "true");
+    document.title = originalTitle;
+  }, 300);
   toast("PDF report ready. Choose Save as PDF in the print dialog.");
+}
+
+function reportFilename(date = new Date()) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hour = String(date.getHours()).padStart(2, "0");
+  const minute = String(date.getMinutes()).padStart(2, "0");
+  return `Cash-Runway-Report-${year}-${month}-${day}-${hour}${minute}`;
 }
 
 function buildReportModel(forecast) {

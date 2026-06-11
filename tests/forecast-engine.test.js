@@ -119,6 +119,7 @@ function forecast(events, options = {}) {
 
 assert.equal(app.moneyValue("-25"), 0);
 assert.equal(app.signedMoneyValue("-25"), -25);
+assert.equal(app.reportFilename(new Date(2026, 5, 11, 11, 42)), "Cash-Runway-Report-2026-06-11-1142");
 
 {
   const schedule = app.buildSnowballSchedule(
