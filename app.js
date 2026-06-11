@@ -1233,9 +1233,24 @@ async function copySummary() {
 function printPdfReport() {
   const forecast = generateForecast(state);
   const report = buildReportModel(forecast);
+  const filename = reportFilename(report.createdAt);
+  const reportHtml = renderReportHtml(report);
+  const reportDocument = renderReportDocument(filename, reportHtml);
+  const reportWindow = window.open("", filename);
+
+  if (reportWindow) {
+    reportWindow.document.open();
+    reportWindow.document.write(reportDocument);
+    reportWindow.document.close();
+    reportWindow.focus();
+    reportWindow.setTimeout(() => reportWindow.print(), 250);
+    toast("PDF report opened. Choose Save as PDF in the print dialog.");
+    return;
+  }
+
   const originalTitle = document.title;
-  document.title = reportFilename(report.createdAt);
-  els.printReportOutput.innerHTML = renderReportHtml(report);
+  document.title = filename;
+  els.printReportOutput.innerHTML = reportHtml;
   els.printReportOutput.setAttribute("aria-hidden", "false");
   window.print();
   scheduleReportCleanup(originalTitle);
@@ -1261,6 +1276,134 @@ function reportFilename(date = new Date()) {
   const hour = String(date.getHours()).padStart(2, "0");
   const minute = String(date.getMinutes()).padStart(2, "0");
   return `Cash-Runway-Report-${year}-${month}-${day}-${hour}${minute}`;
+}
+
+function renderReportDocument(filename, reportHtml) {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>${escapeHtml(filename)}</title>
+    <style>${reportDocumentStyles()}</style>
+  </head>
+  <body>
+    <section class="print-report">${reportHtml}</section>
+  </body>
+</html>`;
+}
+
+function reportDocumentStyles() {
+  return `
+    @page { margin: 0.5in; }
+    * { box-sizing: border-box; }
+    body {
+      background: #fff;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0.5in;
+    }
+    .print-report {
+      color: #111827;
+      font-size: 10px;
+      line-height: 1.35;
+    }
+    .print-report article { display: grid; gap: 12px; }
+    .print-report h1,
+    .print-report h2,
+    .print-report p { margin: 0; }
+    .print-report h1 { font-size: 22px; }
+    .print-report h2 { font-size: 14px; margin-bottom: 8px; }
+    .report-header { border-bottom: 2px solid #0f766e; padding-bottom: 12px; }
+    .eyebrow {
+      color: #0f766e;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+    .report-callout {
+      border: 1px solid #d1d5db;
+      border-left: 5px solid #0f766e;
+      display: grid;
+      grid-template-columns: 125px minmax(0, 1fr);
+      gap: 10px;
+      padding: 10px;
+      page-break-inside: avoid;
+    }
+    .report-callout.caution { border-left-color: #ca8a04; }
+    .report-callout.danger { border-left-color: #dc2626; }
+    .report-callout span,
+    .report-grid span {
+      color: #4b5563;
+      display: block;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .report-callout strong { display: block; font-size: 18px; margin-top: 4px; }
+    .report-callout p { overflow-wrap: anywhere; }
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+    }
+    .report-grid div {
+      border: 1px solid #d1d5db;
+      min-width: 0;
+      padding: 7px;
+      page-break-inside: avoid;
+    }
+    .report-grid strong {
+      display: block;
+      font-size: 13px;
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+    .report-grid small { color: #4b5563; display: block; margin-top: 3px; }
+    table {
+      border-collapse: collapse;
+      table-layout: fixed;
+      width: 100%;
+    }
+    thead { display: table-row-group; }
+    th,
+    td {
+      border: 1px solid #d1d5db;
+      overflow-wrap: anywhere;
+      padding: 5px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f3f4f6;
+      font-size: 8px;
+      text-transform: uppercase;
+    }
+    tr,
+    section {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    th:nth-child(1),
+    td:nth-child(1) { width: 20%; }
+    th:nth-child(2),
+    td:nth-child(2) { width: 28%; }
+    th:nth-child(3),
+    td:nth-child(3) { width: 15%; }
+    th:nth-child(4),
+    td:nth-child(4),
+    th:nth-child(5),
+    td:nth-child(5) { width: 18.5%; }
+    footer {
+      border-top: 1px solid #d1d5db;
+      color: #4b5563;
+      padding-top: 10px;
+    }
+    @media print {
+      body { margin: 0; }
+    }
+  `;
 }
 
 function buildReportModel(forecast) {
