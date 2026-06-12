@@ -19,6 +19,10 @@ const state = {
   editingEventId: "",
   calendarMonth: todayIso().slice(0, 7),
   theme: "light",
+  collapsedSections: {
+    planSetup: false,
+    savedEvents: false,
+  },
 };
 
 const scenarioControls = [
@@ -62,6 +66,10 @@ function bindElements() {
     "eventFormTitle",
     "eventSubmit",
     "cancelEdit",
+    "planSetupToggle",
+    "planSetupContent",
+    "savedEventsToggle",
+    "savedEventsContent",
     "eventList",
     "eventCount",
     "eventEmpty",
@@ -151,6 +159,8 @@ function bindEvents() {
   });
 
   els.cancelEdit.addEventListener("click", resetEventForm);
+  els.planSetupToggle.addEventListener("click", () => toggleSection("planSetup"));
+  els.savedEventsToggle.addEventListener("click", () => toggleSection("savedEvents"));
   els.eventList.addEventListener("click", handleEventListAction);
   els.calendarPrev.addEventListener("click", () => shiftCalendarMonth(-1));
   els.calendarNext.addEventListener("click", () => shiftCalendarMonth(1));
@@ -225,6 +235,7 @@ function resetEventForm() {
 function startEditingEvent(id) {
   const event = state.events.find((item) => item.id === id);
   if (!event) return;
+  setSectionCollapsed("planSetup", false);
   state.editingEventId = id;
   els.eventName.value = event.name;
   els.eventAmount.value = event.amount;
@@ -272,6 +283,7 @@ function loadState() {
       state.currentBalance = Number(saved.currentBalance) || 0;
       state.forecastYears = forecastYearsValue(saved.forecastYears);
       state.theme = themeValue(saved.theme);
+      state.collapsedSections = collapsedSectionsValue(saved.collapsedSections);
       state.events = saved.events.map(normalizeEvent);
     }
   } catch {
@@ -289,9 +301,17 @@ function saveState() {
       currentBalance: state.currentBalance,
       forecastYears: state.forecastYears,
       theme: state.theme,
+      collapsedSections: state.collapsedSections,
       events: state.events,
     })
   );
+}
+
+function collapsedSectionsValue(value) {
+  return {
+    planSetup: Boolean(value?.planSetup),
+    savedEvents: Boolean(value?.savedEvents),
+  };
 }
 
 function normalizeEvent(event) {
@@ -316,6 +336,31 @@ function applyTheme() {
   els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
   els.themeToggle.setAttribute("aria-pressed", String(isDark));
   els.themeColor.content = isDark ? "#111513" : "#23756b";
+}
+
+function toggleSection(section) {
+  setSectionCollapsed(section, !state.collapsedSections[section]);
+}
+
+function setSectionCollapsed(section, collapsed, shouldSave = true) {
+  state.collapsedSections = {
+    ...state.collapsedSections,
+    [section]: Boolean(collapsed),
+  };
+  renderCollapsibleSections();
+  if (shouldSave) saveState();
+}
+
+function renderCollapsibleSections() {
+  setCollapsibleUi("planSetup", els.planSetupToggle, els.planSetupContent);
+  setCollapsibleUi("savedEvents", els.savedEventsToggle, els.savedEventsContent);
+}
+
+function setCollapsibleUi(section, button, content) {
+  const collapsed = Boolean(state.collapsedSections[section]);
+  content.hidden = collapsed;
+  button.textContent = collapsed ? "Show" : "Hide";
+  button.setAttribute("aria-expanded", String(!collapsed));
 }
 
 // Forecasting is deliberately data-first: every view, stress test, and calculator
@@ -583,6 +628,7 @@ function renderAll() {
   const forecast = generateForecast(state);
   renderHeader(forecast);
   renderEvents();
+  renderCollapsibleSections();
   renderDaily(forecast);
   renderCalendar(forecast);
   renderMonthly(forecast);

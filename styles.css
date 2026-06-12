@@ -478,6 +478,29 @@ th:first-child {
   font-weight: 750;
 }
 
+.panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.panel-actions p {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.collapse-toggle {
+  min-height: 36px;
+  padding: 0 12px;
+}
+
+.collapsible-content[hidden] {
+  display: none;
+}
+
 .compact-heading {
   margin: 0 0 10px;
 }
@@ -1253,6 +1276,11 @@ input[type="range"] {
   .panel-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .panel-actions {
+    justify-content: flex-start;
+    width: 100%;
   }
 
   .calendar-controls {
