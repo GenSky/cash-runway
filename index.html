@@ -19,7 +19,7 @@
     </script>
     <link rel="icon" href="icon.svg" type="image/svg+xml" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="stylesheet" href="styles.css?v=25" />
+    <link rel="stylesheet" href="styles.css?v=26" />
   </head>
   <body>
     <header class="app-header">
@@ -65,69 +65,74 @@
               <p class="eyebrow">Plan Setup</p>
               <h2 id="eventFormTitle">Add forecast event</h2>
             </div>
-            <button id="cancelEdit" class="ghost-button" type="button" hidden>Cancel Edit</button>
+            <div class="panel-actions">
+              <button id="planSetupToggle" class="ghost-button collapse-toggle" type="button" aria-expanded="true" aria-controls="planSetupContent">Hide</button>
+              <button id="cancelEdit" class="ghost-button" type="button" hidden>Cancel Edit</button>
+            </div>
           </div>
 
-          <form id="balanceForm" class="inline-form">
-            <label>
-              Current account balance
-              <input id="currentBalance" type="number" step="0.01" inputmode="decimal" required />
-              <small class="field-help">Use the balance before any one-time events you enter for earlier dates. Past one-time events are rolled into the first forecast day.</small>
-            </label>
-            <label>
-              Forecast window
-              <select id="forecastYears">
-                <option value="1">1 year</option>
-                <option value="2">2 years</option>
-                <option value="3">3 years</option>
-                <option value="5">5 years</option>
-              </select>
-            </label>
-            <button type="submit">Update</button>
-          </form>
+          <div id="planSetupContent" class="collapsible-content">
+            <form id="balanceForm" class="inline-form">
+              <label>
+                Current account balance
+                <input id="currentBalance" type="number" step="0.01" inputmode="decimal" required />
+                <small class="field-help">Use the balance before any one-time events you enter for earlier dates. Past one-time events are rolled into the first forecast day.</small>
+              </label>
+              <label>
+                Forecast window
+                <select id="forecastYears">
+                  <option value="1">1 year</option>
+                  <option value="2">2 years</option>
+                  <option value="3">3 years</option>
+                  <option value="5">5 years</option>
+                </select>
+              </label>
+              <button type="submit">Update</button>
+            </form>
 
-          <form id="eventForm" class="event-form">
-            <div class="form-grid">
+            <form id="eventForm" class="event-form">
+              <div class="form-grid">
+                <label>
+                  Event name
+                  <input id="eventName" type="text" placeholder="Paycheck, rent, utilities" required />
+                </label>
+                <label>
+                  Amount
+                  <input id="eventAmount" type="number" step="0.01" inputmode="decimal" min="0" required />
+                </label>
+                <label>
+                  Type
+                  <select id="eventType">
+                    <option value="income">Income</option>
+                    <option value="expense">Expense</option>
+                  </select>
+                </label>
+                <label>
+                  Start date
+                  <input id="eventStart" type="date" required />
+                </label>
+                <label>
+                  Recurrence
+                  <select id="eventRecurrence">
+                    <option value="none">None</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Biweekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </label>
+                <label>
+                  End date
+                  <input id="eventEnd" type="date" />
+                </label>
+              </div>
               <label>
-                Event name
-                <input id="eventName" type="text" placeholder="Paycheck, rent, utilities" required />
+                Notes
+                <textarea id="eventNotes" rows="2" placeholder="Optional context"></textarea>
               </label>
-              <label>
-                Amount
-                <input id="eventAmount" type="number" step="0.01" inputmode="decimal" min="0" required />
-              </label>
-              <label>
-                Type
-                <select id="eventType">
-                  <option value="income">Income</option>
-                  <option value="expense">Expense</option>
-                </select>
-              </label>
-              <label>
-                Start date
-                <input id="eventStart" type="date" required />
-              </label>
-              <label>
-                Recurrence
-                <select id="eventRecurrence">
-                  <option value="none">None</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="biweekly">Biweekly</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="yearly">Yearly</option>
-                </select>
-              </label>
-              <label>
-                End date
-                <input id="eventEnd" type="date" />
-              </label>
-            </div>
-            <label>
-              Notes
-              <textarea id="eventNotes" rows="2" placeholder="Optional context"></textarea>
-            </label>
-            <button id="eventSubmit" type="submit">Add Forecast Event</button>
-          </form>
+              <button id="eventSubmit" type="submit">Add Forecast Event</button>
+            </form>
+          </div>
 
           <div class="event-manager" aria-label="Event calendar">
             <div class="panel-heading compact-heading">
@@ -135,10 +140,15 @@
                 <p class="eyebrow">Event Calendar</p>
                 <h2>Saved forecast events</h2>
               </div>
-              <p id="eventCount">0 events</p>
+              <div class="panel-actions">
+                <p id="eventCount">0 events</p>
+                <button id="savedEventsToggle" class="ghost-button collapse-toggle" type="button" aria-expanded="true" aria-controls="savedEventsContent">Hide</button>
+              </div>
             </div>
-            <div id="eventList" class="event-list"></div>
-            <p id="eventEmpty" class="empty-state">No saved events yet. Add income, bills, transfers, or expenses above.</p>
+            <div id="savedEventsContent" class="collapsible-content">
+              <div id="eventList" class="event-list"></div>
+              <p id="eventEmpty" class="empty-state">No saved events yet. Add income, bills, transfers, or expenses above.</p>
+            </div>
           </div>
         </section>
 
@@ -316,6 +326,6 @@
 
     <section id="printReportOutput" class="print-report" aria-hidden="true"></section>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
-    <script src="app.js?v=25"></script>
+    <script src="app.js?v=26"></script>
   </body>
 </html>
