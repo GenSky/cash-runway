@@ -315,7 +315,7 @@ function applyTheme() {
   els.themeToggle.textContent = isDark ? "Light" : "Dark";
   els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
   els.themeToggle.setAttribute("aria-pressed", String(isDark));
-  els.themeColor.content = isDark ? "#0f0d0a" : "#ff90e8";
+  els.themeColor.content = isDark ? "#111513" : "#23756b";
 }
 
 // Forecasting is deliberately data-first: every view, stress test, and calculator
@@ -678,9 +678,20 @@ function renderCalendar(forecast) {
   const gridStart = addDays(monthStart, -monthStart.getDay());
   const days = Array.from({ length: 42 }, (_, index) => addDays(gridStart, index));
   const dailyByDate = new Map(forecast.daily.map((day) => [day.date, day]));
+  const savedEventsByDate = mapSavedEventsToDates(days);
+  const calendarMonthDays = days
+    .filter((date) => date.getMonth() === monthStart.getMonth())
+    .map((date) => {
+      const dateIso = isoDate(date);
+      const projectedDay = dailyByDate.get(dateIso);
+      return {
+        date: dateIso,
+        events: projectedDay?.events || savedEventsByDate.get(dateIso) || [],
+      };
+    });
   const monthDays = forecast.daily.filter((day) => day.date.startsWith(state.calendarMonth));
-  const eventDays = monthDays.filter((day) => day.events.length > 0);
-  const eventCount = monthDays.reduce((total, day) => total + day.events.length, 0);
+  const eventDays = calendarMonthDays.filter((day) => day.events.length > 0);
+  const eventCount = calendarMonthDays.reduce((total, day) => total + day.events.length, 0);
   const lowest = monthDays.length
     ? monthDays.reduce((min, day) => (day.endingBalance < min.endingBalance ? day : min), monthDays[0])
     : null;
@@ -689,6 +700,14 @@ function renderCalendar(forecast) {
   els.calendarMeta.textContent = monthDays.length
     ? `${eventDays.length} event days · ${eventCount} total events · Lowest ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`
     : `This month is outside the current ${state.forecastYears}-${state.forecastYears === 1 ? "year" : "year"} forecast window.`;
+
+  els.calendarMeta.textContent = monthDays.length
+    ? `${eventDays.length} event days · ${eventCount} total events · Lowest ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`
+    : `${eventDays.length} event days · ${eventCount} total events · This month is outside the current ${state.forecastYears}-${state.forecastYears === 1 ? "year" : "year"} forecast window.`;
+
+  els.calendarMeta.textContent = monthDays.length
+    ? `${eventDays.length} event days - ${eventCount} total events - Lowest ${formatMoney(lowest.endingBalance)} on ${formatDate(lowest.date)}`
+    : `${eventDays.length} event days - ${eventCount} total events - This month is outside the current ${state.forecastYears}-${state.forecastYears === 1 ? "year" : "year"} forecast window.`;
 
   const weekdayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
     .map((label) => `<div class="calendar-weekday">${label}</div>`)
@@ -700,7 +719,7 @@ function renderCalendar(forecast) {
       const day = dailyByDate.get(dateIso);
       const isCurrentMonth = date.getMonth() === monthStart.getMonth();
       const isToday = dateIso === todayIso();
-      const events = day?.events || [];
+      const events = day?.events || savedEventsByDate.get(dateIso) || [];
       const visibleEvents = events.slice(0, 3);
       const classes = [
         "calendar-day",
@@ -730,6 +749,24 @@ function renderCalendar(forecast) {
     .join("");
 
   els.calendarGrid.innerHTML = `${weekdayLabels}${dayCells}`;
+}
+
+function mapSavedEventsToDates(dates) {
+  const savedEventsByDate = new Map();
+  const savedEvents = state.events.map(normalizeEvent);
+
+  dates.forEach((date) => {
+    const events = savedEvents
+      .filter((event) => eventOccursOn(event, date))
+      .map((event) => ({
+        ...event,
+        signedAmount: event.type === "income" ? event.amount : -event.amount,
+      }));
+
+    if (events.length) savedEventsByDate.set(isoDate(date), events);
+  });
+
+  return savedEventsByDate;
 }
 
 function renderMonthly(forecast) {
