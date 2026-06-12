@@ -30,8 +30,8 @@
   --coral: #ff7051;
   --mint: #90ee90;
   --cream: #fffaf0;
-  --shadow: 6px 6px 0 var(--line);
-  --shadow-soft: 4px 4px 0 var(--line);
+  --shadow: 3px 3px 0 var(--line);
+  --shadow-soft: 1px 1px 0 var(--line);
   --radius: 2px;
   font-family: Arial, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -1306,7 +1306,7 @@ input[type="range"] {
    restyle the current app without changing forecast, report, or PWA logic. */
 button,
 .file-button {
-  border: 3px solid var(--line);
+  border: 2px solid var(--line);
   background: var(--pink);
   color: var(--ink);
   border-radius: var(--radius);
@@ -1316,8 +1316,8 @@ button,
 
 button:hover,
 .file-button:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 6px 6px 0 var(--line);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--line);
 }
 
 .icon-button {
@@ -1332,7 +1332,7 @@ button:hover,
 
 .ghost-button,
 .delete-button {
-  border: 3px solid var(--line);
+  border: 2px solid var(--line);
   background: var(--field);
   color: var(--ink);
 }
@@ -1356,9 +1356,9 @@ a:focus-visible {
 input,
 select,
 textarea {
-  border: 3px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 2px 2px 0 var(--line);
+  box-shadow: none;
   font-weight: 700;
 }
 
@@ -1403,9 +1403,8 @@ label,
 .calendar-grid,
 .bar-graph,
 .line-graph,
-.calc-output,
-.saved-event {
-  border: 3px solid var(--line);
+.calc-output {
+  border: 2px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -1431,20 +1430,20 @@ label,
   border-color: var(--line);
   background: var(--safe);
   color: var(--ink);
-  box-shadow: 3px 3px 0 var(--line);
+  box-shadow: 2px 2px 0 var(--line);
 }
 
 .balance-card {
   position: relative;
   overflow: hidden;
-  border-top: 3px solid var(--line);
+  border-top: 2px solid var(--line);
   background:
     linear-gradient(135deg, transparent 0 72%, rgba(255, 144, 232, 0.72) 72% 78%, transparent 78%),
     var(--caution-soft);
 }
 
 .score-card {
-  border-top: 3px solid var(--line);
+  border-top: 2px solid var(--line);
   background: var(--plum-soft);
 }
 
@@ -1485,7 +1484,7 @@ table {
 
 th,
 td {
-  border-bottom: 3px solid var(--line);
+  border-bottom: 2px solid var(--line);
 }
 
 th {
@@ -1500,19 +1499,15 @@ td {
 
 th:first-child,
 td:first-child {
-  box-shadow: 3px 0 0 var(--line);
+  box-shadow: 2px 0 0 var(--line);
 }
 
 .status-pill,
-.event-chip,
-.event-type,
-.event-meta span,
-.calendar-event,
-.calendar-more {
-  border: 2px solid var(--line);
+.event-chip {
+  border: 1px solid rgba(11, 15, 12, 0.22);
   border-radius: var(--radius);
-  box-shadow: 2px 2px 0 var(--line);
-  font-weight: 950;
+  box-shadow: none;
+  font-weight: 850;
 }
 
 .safe,
@@ -1546,9 +1541,29 @@ td:first-child {
   color: var(--blue);
 }
 
-.saved-event {
-  border-left-width: 8px;
+.event-list {
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
   background: var(--table);
+  gap: 0;
+  overflow: hidden;
+}
+
+.event-list:empty {
+  display: none;
+}
+
+.saved-event {
+  border: 0;
+  border-left: 6px solid var(--blue);
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--table);
+  padding: 14px 16px;
+}
+
+.saved-event + .saved-event {
+  border-top: 2px solid var(--line);
 }
 
 .saved-event.income {
@@ -1561,10 +1576,31 @@ td:first-child {
 
 .event-actions button {
   background: var(--field);
+  box-shadow: none;
 }
 
 .event-actions .delete-button {
   background: var(--danger-soft);
+}
+
+.event-type,
+.event-meta span,
+.calendar-event,
+.calendar-more {
+  border: 0;
+  border-radius: 999px;
+  box-shadow: none;
+  font-weight: 850;
+}
+
+.event-meta span {
+  background: var(--soft);
+  color: var(--muted);
+}
+
+.calendar-event,
+.calendar-more {
+  border-radius: 4px;
 }
 
 .metric-card,
@@ -1580,10 +1616,10 @@ td:first-child {
 }
 
 .bar-fill {
-  border: 3px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--radius) var(--radius) 0 0;
   background: var(--safe);
-  box-shadow: 3px 0 0 var(--line);
+  box-shadow: 2px 0 0 var(--line);
 }
 
 .bar-fill.negative {
@@ -1602,7 +1638,7 @@ td:first-child {
   position: absolute;
   inset: 0 0 auto;
   height: 104px;
-  border-bottom: 3px solid var(--line);
+  border-bottom: 2px solid var(--line);
   background:
     linear-gradient(135deg, transparent 0 34%, rgba(255, 255, 255, 0.5) 34% 39%, transparent 39%),
     repeating-linear-gradient(45deg, rgba(11, 15, 12, 0.12) 0 8px, transparent 8px 16px),
@@ -1642,7 +1678,7 @@ td:first-child {
   padding: 5px 8px;
   font-size: 0.76rem;
   font-weight: 950;
-  box-shadow: 3px 3px 0 var(--line);
+  box-shadow: 2px 2px 0 var(--line);
 }
 
 .calculator-card h3 {
@@ -1652,7 +1688,7 @@ td:first-child {
 
 .calc-output,
 .empty-state {
-  border: 3px dashed var(--line);
+  border: 2px dashed var(--line);
   background: var(--soft);
   color: var(--ink);
 }
@@ -1690,7 +1726,7 @@ td:first-child {
 }
 
 .toast {
-  border: 3px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   color: var(--panel);
