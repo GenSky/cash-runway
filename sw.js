@@ -1,11 +1,11 @@
-const CACHE_NAME = "cash-runway-v23";
+const CACHE_NAME = "cash-runway-v24";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./privacy.html",
   "./terms.html",
-  "./styles.css?v=23",
-  "./app.js?v=23",
+  "./styles.css?v=24",
+  "./app.js?v=24",
   "./manifest.json",
   "./icon.svg",
 ];
