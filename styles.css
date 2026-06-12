@@ -595,12 +595,9 @@ th:first-child {
   background: var(--danger-soft);
 }
 
-.lowest-row td:first-child {
-  box-shadow: inset 4px 0 0 var(--danger);
-}
-
+.lowest-row td:first-child,
 .paycheck-row td:first-child {
-  box-shadow: inset 4px 0 0 var(--safe);
+  box-shadow: 1px 0 0 var(--line);
 }
 
 .metric-card {
@@ -1500,6 +1497,25 @@ td {
 th:first-child,
 td:first-child {
   box-shadow: 2px 0 0 var(--line);
+}
+
+#dailyView th:nth-child(3),
+#dailyView td:nth-child(3) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+#dailyView th:nth-child(3) {
+  min-width: 150px;
+}
+
+#dailyView td:nth-child(3) {
+  color: var(--ink);
+  font-size: clamp(1.16rem, 1.45vw, 1.45rem);
+  font-feature-settings: "tnum";
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  letter-spacing: 0;
 }
 
 .status-pill,
