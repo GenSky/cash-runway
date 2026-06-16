@@ -1,11 +1,11 @@
-const CACHE_NAME = "bumi-v27";
+const CACHE_NAME = "bumi-v28";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./privacy.html",
   "./terms.html",
-  "./styles.css?v=27",
-  "./app.js?v=27",
+  "./styles.css?v=28",
+  "./app.js?v=28",
   "./assets/bumi-icon.svg",
   "./assets/bumi-logo.svg",
   "./manifest.json",
