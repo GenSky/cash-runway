@@ -1,12 +1,12 @@
 {
-  "name": "Cash Runway",
-  "short_name": "Cash Runway",
+  "name": "Bumi Money",
+  "short_name": "Bumi",
   "description": "See your future bank balance before your bills hit.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f7f2e8",
-  "theme_color": "#23756b",
+  "background_color": "#f6efe1",
+  "theme_color": "#243f5f",
   "orientation": "portrait-primary",
   "icons": [
     {

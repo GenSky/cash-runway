@@ -1,8 +1,8 @@
-# Cash Runway
+# Bumi Money
 
 See your future bank balance before your bills hit.
 
-Cash Runway is a static, offline-capable PWA for forecasting account balances across the next 365 days. It is not a budgeting app, spending category app, or pie chart app. The core product is the forecast engine: "What will my account balance be on any future day if life happens?"
+Bumi Money is a static, offline-capable PWA for forecasting account balances across the next 365 days. It is not a budgeting app, spending category app, or pie chart app. The core product is the forecast engine: "What will my account balance be on any future day if life happens?"
 
 ## Features
 
@@ -15,7 +15,7 @@ Cash Runway is a static, offline-capable PWA for forecasting account balances ac
 - Yearly 12-month projection with best/worst month and year-end balance
 - Scenario Center with live sliders and no-save simulation by default
 - Stress Test My Life comparison table
-- Cash Runway Score with plain-English explanation
+- Bumi Score with plain-English explanation
 - Balance transfer, debt snowball, car payment, and emergency fund calculators
 - Add To Calendar buttons that create forecast events
 - Demo data, JSON export/import, reset, and copy summary
@@ -34,7 +34,7 @@ The app is intentionally dependency-free:
 - `sw.js` caches the application shell for offline use.
 - `tests/forecast-engine.test.js` covers the highest-risk forecast and calculator behavior.
 
-All user data is stored in the browser through LocalStorage under `cash-runway-v1`. There is no backend, database, authentication layer, or paid API.
+All user data is stored in the browser through LocalStorage under `cash-runway-v1`. There is no backend, database, authentication layer, or paid API. The legacy storage key is intentionally retained so existing users do not lose plans during the Bumi rebrand.
 
 ## Forecast Engine
 
@@ -46,7 +46,7 @@ It:
 2. Expands one-time and recurring events across a daily 365-day timeline.
 3. Applies scenario-only adjustments without mutating saved data.
 4. Applies each day's income and expenses to the running balance.
-5. Produces daily rows, monthly summaries, yearly summaries, and Cash Runway Score inputs.
+5. Produces daily rows, monthly summaries, yearly summaries, and Bumi Score inputs.
 
 Supported recurrence values are:
 
@@ -99,6 +99,8 @@ The site will be available at:
 ```text
 https://<github-username>.github.io/cash-runway/
 ```
+
+For the Bumi launch, point the custom domain `bumi.money` at the deployed static app when the domain is ready.
 
 ## Future Roadmap
 

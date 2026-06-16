@@ -119,7 +119,7 @@ function forecast(events, options = {}) {
 
 assert.equal(app.moneyValue("-25"), 0);
 assert.equal(app.signedMoneyValue("-25"), -25);
-assert.equal(app.reportFilename(new Date(2026, 5, 11, 11, 42)), "Cash-Runway-Report-2026-06-11-1142");
+assert.equal(app.reportFilename(new Date(2026, 5, 11, 11, 42)), "Bumi-Report-2026-06-11-1142");
 
 {
   const schedule = app.buildSnowballSchedule(
@@ -151,7 +151,7 @@ assert.equal(app.reportFilename(new Date(2026, 5, 11, 11, 42)), "Cash-Runway-Rep
   assert.equal(report.totalIncome, 2500);
   assert.equal(report.totalExpenses, 1200);
   assert.ok(app.renderReportHtml(report).includes("<th>Ending</th>"));
-  assert.ok(app.renderReportDocument("Cash-Runway-Report-2026-06-11-1142", app.renderReportHtml(report)).includes("<title>Cash-Runway-Report-2026-06-11-1142</title>"));
+  assert.ok(app.renderReportDocument("Bumi-Report-2026-06-11-1142", app.renderReportHtml(report)).includes("<title>Bumi-Report-2026-06-11-1142</title>"));
 }
 
 console.log("forecast-engine tests passed");

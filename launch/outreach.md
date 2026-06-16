@@ -56,13 +56,13 @@ Message:
 
 Hi [Name],
 
-I found your content on [specific topic/video]. I built a free tool called Cash Runway that might be useful for people who plan around payday.
+I found your content on [specific topic/video]. I built a free tool called Bumi Money that might be useful for people who plan around payday.
 
 It is not a budgeting/category app. It forecasts future account balance from paychecks, bills, debt payments, transfers, and surprise expenses so someone can see whether they might go negative before bills hit.
 
 No signup, no ads, local-only data:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 If it is useful, feel free to share it. If not, I would still appreciate any feedback on what would make it more practical for your audience.
 
@@ -79,7 +79,7 @@ Pitch:
 
 Hi [Name],
 
-I built Cash Runway, a free no-signup cash-flow forecasting tool for people who plan money around paychecks and bills.
+I built Bumi Money, a free no-signup cash-flow forecasting tool for people who plan money around paychecks and bills.
 
 It answers a simple question:
 
@@ -91,7 +91,7 @@ I thought it might be useful for your readers because [specific reason based on 
 
 Link:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 Happy to send screenshots or a short demo clip if helpful.
 
@@ -112,7 +112,7 @@ Would a transparent feedback post be allowed if I clearly disclose that I built 
 
 Link for review:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 Thanks for checking.
 
@@ -120,9 +120,9 @@ Thanks for checking.
 
 Hi [Name],
 
-Thanks again for taking a look at Cash Runway. I made [specific improvement or note] based on feedback.
+Thanks again for taking a look at Bumi Money. I made [specific improvement or note] based on feedback.
 
 If you know anyone who plans bills around payday, I would appreciate you passing it along.
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
