@@ -4,7 +4,7 @@ Replace bracketed text before posting.
 
 Canonical URL:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## One-Line Hooks
 
@@ -18,11 +18,11 @@ https://gensky.github.io/cash-runway/
 
 Title:
 
-Show HN: Cash Runway - forecast your future bank balance before bills hit
+Show HN: Bumi Money - forecast your future bank balance before bills hit
 
 Text:
 
-I built Cash Runway because most budgeting apps tell you where your money went, but not whether your account will survive the next few weeks.
+I built Bumi Money because most budgeting apps tell you where your money went, but not whether your account will survive the next few weeks.
 
 It is a free, no-signup, local-only PWA for forecasting future account balances from paychecks, bills, debt payments, transfers, one-time expenses, and recurring expenses.
 
@@ -41,7 +41,7 @@ I would appreciate feedback on whether the forecast flow makes sense and what wo
 
 URL:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## Reddit-Style Feedback Post
 
@@ -53,7 +53,7 @@ Title options:
 
 Body:
 
-I built a free tool called Cash Runway because budgeting apps kept answering the wrong question for me.
+I built a free tool called Bumi Money because budgeting apps kept answering the wrong question for me.
 
 I did not want categories or pie charts. I wanted to know:
 
@@ -69,7 +69,7 @@ I am looking for feedback from people who actually plan around payday:
 
 Link:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 Disclosure: I built this. It is free and not financial advice.
 
@@ -79,7 +79,7 @@ I built a free tool for a question budgeting apps do not answer well:
 
 > What will my bank balance be on a future day if life happens?
 
-Cash Runway is not a category budgeting app. It is a cash-flow forecast:
+Bumi Money is not a category budgeting app. It is a cash-flow forecast:
 
 - Add paychecks, bills, debt payments, transfers, one-time expenses, and recurring expenses
 - See projected balances across daily, calendar, monthly, and yearly views
@@ -92,7 +92,7 @@ It is built for people who manage money around payday and want to avoid surprise
 
 I would love practical feedback, especially from anyone who has had to plan around irregular bills or debt payments.
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## X / Threads
 
@@ -100,11 +100,11 @@ I built a free tool to answer one stressful money question:
 
 "Will my account go negative before the next paycheck?"
 
-Cash Runway forecasts future bank balance from paychecks, bills, debt payments, transfers, recurring expenses, and one-time expenses.
+Bumi Money forecasts future bank balance from paychecks, bills, debt payments, transfers, recurring expenses, and one-time expenses.
 
 No signup. Local-only data. Not a budgeting app.
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## Indie Hackers
 
@@ -114,7 +114,7 @@ I built a free cash-flow forecast tool because budgeting apps answer the wrong q
 
 Body:
 
-I built Cash Runway as a free static PWA. The product is a forecast engine for future bank balances.
+I built Bumi Money as a free static PWA. The product is a forecast engine for future bank balances.
 
 The problem:
 
@@ -146,13 +146,13 @@ Feedback I want:
 
 URL:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## Product Hunt
 
 Name:
 
-Cash Runway
+Bumi Money
 
 Tagline:
 
@@ -160,19 +160,19 @@ See your future bank balance before your bills hit.
 
 Description:
 
-Cash Runway is a free, no-signup cash-flow forecasting tool. Add paychecks, bills, debt payments, recurring expenses, transfers, and one-time expenses to see your projected account balance across daily, calendar, monthly, yearly, and scenario views.
+Bumi Money is a free, no-signup cash-flow forecasting tool. Add paychecks, bills, debt payments, recurring expenses, transfers, and one-time expenses to see your projected account balance across daily, calendar, monthly, yearly, and scenario views.
 
 First Comment:
 
 Hi Product Hunt,
 
-I built Cash Runway because budgeting apps often show where money went, but not whether a future day is safe.
+I built Bumi Money because budgeting apps often show where money went, but not whether a future day is safe.
 
 The core question is:
 
 > What will my account balance be on any future day if life happens?
 
-Cash Runway is free, no-signup, local-only, and offline-capable after first load.
+Bumi Money is free, no-signup, local-only, and offline-capable after first load.
 
 I would love feedback on:
 
@@ -190,7 +190,7 @@ Body:
 
 I made a free no-signup tool for planning around paychecks and bills.
 
-It is called Cash Runway, and instead of categorizing past spending, it forecasts future account balance from income, bills, debt payments, recurring expenses, and one-time expenses.
+It is called Bumi Money, and instead of categorizing past spending, it forecasts future account balance from income, bills, debt payments, recurring expenses, and one-time expenses.
 
 The goal is to answer:
 
@@ -200,7 +200,7 @@ It also has a calendar view and stress tests for things like job loss, emergency
 
 Link:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 Disclosure: I built this. It is free, local-only, and not financial advice. I would love feedback from people who plan around payday.
 

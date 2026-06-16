@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" role="img" aria-labelledby="title">
+  <title id="title">Bumi</title>
+  <g transform="translate(12 12)">
+    <rect width="156" height="156" rx="28" fill="#f6efe1"/>
+    <circle cx="78" cy="72" r="48" fill="#243f5f" stroke="#14201d" stroke-width="8"/>
+    <path d="M32 78c11 11 26 17 46 17s35-6 46-17v43H32V78z" fill="#d8c08a"/>
+    <path d="M42 99c17-14 33-20 47-16 10 3 18 1 27-6" fill="none" stroke="#d9a441" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M113 73l17-3-6 16" fill="#d9a441" stroke="#14201d" stroke-width="4" stroke-linejoin="round"/>
+  </g>
+  <text x="194" y="119" fill="#14201d" font-family="Arial, Helvetica, sans-serif" font-size="88" font-weight="900" letter-spacing="-2">Bumi</text>
+</svg>

@@ -4,7 +4,7 @@ Use screen recording plus simple captions. Keep most videos under 35 seconds.
 
 ## Visual Checklist
 
-- Start on the Cash Runway homepage.
+- Start on the Bumi Money homepage.
 - Load demo data.
 - Show the projected balance changing.
 - Show calendar view.
@@ -27,7 +27,7 @@ Steps:
 
 CTA:
 
-"I made this free. Search Cash Runway or use the link."
+"I made this free. Search Bumi or use the link."
 
 ## Script 2: Paycheck-to-Paycheck Calendar
 
@@ -109,7 +109,7 @@ Steps:
 
 CTA:
 
-"Cash Runway answers one question: what will my balance be later?"
+"Bumi Money answers one question: what will my balance be later?"
 
 ## Script 7: Free and Private
 

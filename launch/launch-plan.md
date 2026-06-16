@@ -2,7 +2,7 @@
 
 ## Objective
 
-Get the first 1,000 real users by positioning Cash Runway as a free overdraft-prevention and future-bank-balance tool, not a budgeting app.
+Get the first 1,000 real users by positioning Bumi Money as a free overdraft-prevention and future-bank-balance tool, not a budgeting app.
 
 ## Audience
 
@@ -29,11 +29,11 @@ Short:
 
 Plain:
 
-> Cash Runway is a free, no-signup tool that forecasts your future account balance from paychecks, bills, debt payments, transfers, and one-time expenses.
+> Bumi Money is a free, no-signup tool that forecasts your future account balance from paychecks, bills, debt payments, transfers, and one-time expenses.
 
 Contrast:
 
-> Budgeting apps tell you where money went. Cash Runway shows whether you will be okay on a future date.
+> Budgeting apps tell you where money went. Bumi Money shows whether you will be okay on a future date.
 
 ## Launch Phases
 

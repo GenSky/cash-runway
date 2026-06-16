@@ -1,7 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Bumi</title>
   <rect width="512" height="512" rx="82" fill="#f6efe1"/>
   <circle cx="256" cy="238" r="154" fill="#243f5f" stroke="#14201d" stroke-width="22"/>
   <path d="M111 256c34 34 82 52 145 52s111-18 145-52v136H111V256z" fill="#d8c08a"/>
+  <path d="M138 330c56-46 106-63 151-52 31 8 55 4 79-12" fill="none" stroke="#14201d" stroke-width="18" stroke-linecap="round"/>
   <path d="M136 311c53-42 101-57 143-46 34 9 61 2 89-20" fill="none" stroke="#d9a441" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M357 236l46-9-17 43" fill="#d9a441" stroke="#14201d" stroke-width="12" stroke-linejoin="round"/>
 </svg>

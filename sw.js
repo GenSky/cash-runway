@@ -1,11 +1,13 @@
-const CACHE_NAME = "cash-runway-v26";
+const CACHE_NAME = "bumi-v27";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./privacy.html",
   "./terms.html",
-  "./styles.css?v=26",
-  "./app.js?v=26",
+  "./styles.css?v=27",
+  "./app.js?v=27",
+  "./assets/bumi-icon.svg",
+  "./assets/bumi-logo.svg",
   "./manifest.json",
   "./icon.svg",
 ];

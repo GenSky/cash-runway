@@ -4,7 +4,7 @@ Use this before any public post, submission, DM batch, or community comment.
 
 ## Required
 
-- [ ] The post clearly says the owner built or is working on Cash Runway.
+- [ ] The post clearly says the owner built or is working on Bumi Money.
 - [ ] The post says it is free if relevant.
 - [ ] The post does not claim guaranteed financial results.
 - [ ] The post does not give individual financial advice.

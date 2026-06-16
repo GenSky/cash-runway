@@ -95,6 +95,7 @@ function bindElements() {
     "scenarioYearEnd",
     "scenarioSummary",
     "stressRows",
+    "stressTipJar",
     "toast",
     "loadDemo",
     "exportJson",
@@ -102,6 +103,7 @@ function bindElements() {
     "copySummary",
     "printReport",
     "printReportOutput",
+    "reportTipJar",
     "resetData",
     "applyScenario",
     "stressTest",
@@ -335,7 +337,7 @@ function applyTheme() {
   els.themeToggle.textContent = isDark ? "Light" : "Dark";
   els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
   els.themeToggle.setAttribute("aria-pressed", String(isDark));
-  els.themeColor.content = isDark ? "#111513" : "#23756b";
+  els.themeColor.content = isDark ? "#111513" : "#243f5f";
 }
 
 function toggleSection(section) {
@@ -945,7 +947,13 @@ function runStressTests() {
       </tr>`;
     })
     .join("");
+  showStressTipJar();
   toast("Stress test complete.");
+}
+
+function showStressTipJar() {
+  if (!els.stressTipJar) return;
+  els.stressTipJar.hidden = false;
 }
 
 function applyScenario() {
@@ -1249,7 +1257,7 @@ function exportJson() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "cash-runway-plan.json";
+  link.download = "bumi-plan.json";
   link.click();
   URL.revokeObjectURL(url);
   toast("Export created.");
@@ -1273,7 +1281,7 @@ async function importJson(event) {
     renderAll();
     toast("Plan imported.");
   } catch {
-    toast("Import failed. Use a Cash Runway JSON export.");
+    toast("Import failed. Use a Bumi JSON export.");
   } finally {
     event.target.value = "";
   }
@@ -1296,13 +1304,13 @@ function resetData() {
 async function copySummary() {
   const forecast = generateForecast(state);
   const text = [
-    "Cash Runway Summary",
+    "Bumi Money Summary",
     `Current balance: ${formatMoney(state.currentBalance)}`,
     `Forecast window: ${state.forecastYears} ${state.forecastYears === 1 ? "year" : "years"}`,
     `Year-end projection: ${formatMoney(forecast.yearly.yearEndBalance)}`,
     `Lowest balance: ${formatMoney(forecast.score.lowestBalance)}`,
     `Negative days: ${forecast.score.negativeDays}`,
-    `Cash Runway Score: ${forecast.score.score} (${forecast.score.status})`,
+    `Bumi Score: ${forecast.score.score} (${forecast.score.status})`,
     forecast.score.explanation,
   ].join("\n");
   try {
@@ -1328,6 +1336,7 @@ function printPdfReport() {
     reportWindow.focus();
     reportWindow.setTimeout(() => reportWindow.print(), 250);
     toast("PDF report opened. Choose Save as PDF in the print dialog.");
+    showReportTipJar();
     return;
   }
 
@@ -1337,7 +1346,17 @@ function printPdfReport() {
   els.printReportOutput.setAttribute("aria-hidden", "false");
   window.print();
   scheduleReportCleanup(originalTitle);
+  showReportTipJar();
   toast("PDF report ready. Choose Save as PDF in the print dialog.");
+}
+
+function showReportTipJar() {
+  if (!els.reportTipJar) return;
+  els.reportTipJar.hidden = false;
+  window.clearTimeout(window.reportTipTimer);
+  window.reportTipTimer = window.setTimeout(() => {
+    els.reportTipJar.hidden = true;
+  }, 18000);
 }
 
 function scheduleReportCleanup(originalTitle) {
@@ -1358,7 +1377,7 @@ function reportFilename(date = new Date()) {
   const day = String(date.getDate()).padStart(2, "0");
   const hour = String(date.getHours()).padStart(2, "0");
   const minute = String(date.getMinutes()).padStart(2, "0");
-  return `Cash-Runway-Report-${year}-${month}-${day}-${hour}${minute}`;
+  return `Bumi-Report-${year}-${month}-${day}-${hour}${minute}`;
 }
 
 function renderReportDocument(filename, reportHtml) {
@@ -1559,7 +1578,7 @@ function renderReportHtml(report) {
 
   return `<article>
     <header class="report-header">
-      <p class="eyebrow">Cash Runway Report</p>
+      <p class="eyebrow">Bumi Report</p>
       <h1>Cash-flow forecast summary</h1>
       <p>Created ${report.createdAt.toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" })}</p>
     </header>
@@ -1600,7 +1619,7 @@ function renderReportHtml(report) {
     </section>
 
     <footer>
-      <p>Cash Runway is a planning tool, not financial advice. Forecasts are estimates based on the information entered in this browser.</p>
+      <p>Bumi Money is a planning tool, not financial advice. Forecasts are estimates based on the information entered in this browser.</p>
     </footer>
   </article>`;
 }

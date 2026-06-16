@@ -1,16 +1,16 @@
-# Cash Runway Launch Kit
+# Bumi Money Launch Kit
 
-This folder contains the launch operating system for Cash Runway.
+This folder contains the launch operating system for Bumi Money.
 
 Goal: spread a free, no-signup cash-flow forecasting tool through useful demos, community feedback, creator outreach, and search-friendly content.
 
 Core positioning:
 
-> Cash Runway is a free tool that shows your future bank balance before your bills hit. It is not a budgeting app. No categories. No pie charts. No signup. Just future cash-flow forecasting.
+> Bumi Money is a free tool that shows your future bank balance before your bills hit. It is not a budgeting app. No categories. No pie charts. No signup. Just future cash-flow forecasting.
 
 Primary URL:
 
-https://gensky.github.io/cash-runway/
+https://bumi.money/
 
 ## Launch Principles
 
