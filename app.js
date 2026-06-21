@@ -337,7 +337,7 @@ function applyTheme() {
   els.themeToggle.textContent = isDark ? "Light" : "Dark";
   els.themeToggle.title = isDark ? "Switch to light mode" : "Switch to dark mode";
   els.themeToggle.setAttribute("aria-pressed", String(isDark));
-  els.themeColor.content = isDark ? "#111513" : "#243f5f";
+  els.themeColor.content = isDark ? "#171717" : "#23a094";
 }
 
 function toggleSection(section) {
@@ -1416,17 +1416,22 @@ function reportDocumentStyles() {
     .print-report p { margin: 0; }
     .print-report h1 { font-size: 22px; }
     .print-report h2 { font-size: 14px; margin-bottom: 8px; }
-    .report-header { border-bottom: 2px solid #0f766e; padding-bottom: 12px; }
+    .report-header { border-bottom: 2px solid #111111; padding-bottom: 12px; }
     .eyebrow {
-      color: #0f766e;
+      color: #111111;
+      background: #b8ec51;
+      border: 1px solid #111111;
+      border-radius: 999px;
+      display: inline-block;
       font-size: 10px;
       font-weight: 800;
       letter-spacing: 0;
+      padding: 2px 6px;
       text-transform: uppercase;
     }
     .report-callout {
-      border: 1px solid #d1d5db;
-      border-left: 5px solid #0f766e;
+      border: 1px solid #111111;
+      border-left: 5px solid #23a094;
       display: grid;
       grid-template-columns: 125px minmax(0, 1fr);
       gap: 10px;
